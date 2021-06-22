@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Radio Santidad 102.5FM</string>
+    <string name="status_online">Al aire</string>
+    <string name="status_offline">Fuera del aire</string>
+    <string name="description_image">Logo de la radio</string>
+    <string name="empty"></string>
+    <string name="example_title">Jesus mi fiel amigo</string>
 </resources>
