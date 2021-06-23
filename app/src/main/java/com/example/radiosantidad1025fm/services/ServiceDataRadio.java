@@ -13,12 +13,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServiceDataRadio {
-    private Config configs = new Config();
+    private Config configs;
     private JsonObjectRequest jsonObjectRequest = null;
     private Context context;
 
-    public ServiceDataRadio(Context context) {
+    public ServiceDataRadio(Context context, Config configs) {
         this.context = context;
+        this. configs = configs;
     }
 
     public void getDataRadio() {
@@ -26,12 +27,12 @@ public class ServiceDataRadio {
                 Request.Method.GET, configs.getUrlDataRadio(), null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(context, response.toString(), Toast.LENGTH_LONG);
+                Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Error en la solicitud", Toast.LENGTH_LONG);
+                Toast.makeText(context, "Error en la solicitud", Toast.LENGTH_LONG).show();
             }
         }
         );

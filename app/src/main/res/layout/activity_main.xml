@@ -12,12 +12,12 @@
         android:layout_height="200dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/description_image"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/titleSound"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/radio_logo" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switch1"
+        android:id="@+id/switchStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/titleSound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/buttinPlayStop"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginBottom="5dp"
@@ -67,7 +67,7 @@
         android:contentDescription="@string/description_image" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/buttonVolume"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginEnd="16dp"
@@ -81,14 +81,14 @@
         android:contentDescription="@string/description_image" />
 
     <SeekBar
-        android:id="@+id/seekBar"
+        android:id="@+id/barVolume"
         android:layout_width="30dp"
         android:layout_height="200dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
         android:rotation="270"
-        app:layout_constraintBottom_toTopOf="@+id/imageButton2"
+        app:layout_constraintBottom_toTopOf="@+id/buttonVolume"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
