@@ -71,7 +71,6 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 volumen = (float) progress/100;
-                //if (statusAudio == statusPlay)
                 mediaPlayer.setVolume(volumen, volumen);
             }
 
@@ -93,17 +92,18 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
             statusAudio = statusInit;
         }
         else if (statusAudio == statusReady) {
-            // mediaPlayer.setVolume(volumen, volumen);
             statusAudio = statusPlay;
             mediaPlayer.start();
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         } else if (statusAudio == statusStop) {
-            mediaPlayer.prepareAsync();
-            Toast.makeText(context, "Preparando para reproducir.....", Toast.LENGTH_LONG).show();
-            statusAudio = statusInit;
+            // mediaPlayer.prepareAsync();
+            // Toast.makeText(context, "Preparando para reproducir.....", Toast.LENGTH_LONG).show();
+            statusAudio = statusPlay;
         } else if (statusAudio == statusPlay) {
-            statusAudio = statusStop;
+            statusAudio = statusInit;
             mediaPlayer.stop();
+            //mediaPlayer.reset();
+            mediaPlayer.prepareAsync();
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
         }
     }
