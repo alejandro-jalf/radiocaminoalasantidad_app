@@ -12,6 +12,7 @@ import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.services.ServiceAudio;
 import com.example.radiosantidad1025fm.services.ServiceDataRadio;
 import com.example.radiosantidad1025fm.services.ServiceTimerAction;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton buttonVolume;
     private SeekBar barVolume;
     private TextView titleSound;
+    private SwitchMaterial switchMaterial;
     private int visibleBarVolume;
     private Config config;
     private ServiceDataRadio serviceDataRadio;
@@ -29,19 +31,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        loadInstances();
         initComponents();
+        loadInstances();
     }
 
     private void loadInstances() {
         config = new Config();
-        serviceDataRadio = new ServiceDataRadio(this, config);
-        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
-        serviceAudio = new ServiceAudio(this, config, buttonPlayStop);
+        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial);
+        serviceDataRadio.getDataRadio();
+        //serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop);
     }
 
     private void initComponents() {
+        switchMaterial = findViewById(R.id.switchStatus);
+        switchMaterial.setChecked(true);
+        switchMaterial.setEnabled(false);
         buttonPlayStop = findViewById(R.id.buttinPlayStop);
         buttonVolume = findViewById(R.id.buttonVolume);
         buttonVolume.setOnClickListener(new View.OnClickListener() {

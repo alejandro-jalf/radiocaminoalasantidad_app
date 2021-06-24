@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -17,7 +18,7 @@ import com.example.radiosantidad1025fm.R;
 
 import java.io.IOException;
 
-public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private final int statusReady = 4;
     private final int statusInit = 3;
     private final int statusError = 2;
@@ -33,6 +34,12 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         this.context = context;
         this.config = config;
         this.buttonPlayStop = buttonPlayStop;
+        buttonPlayStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleAudio();
+            }
+        });
         this.statusAudio = statusInit;
         mediaPlayer = new MediaPlayer();
         initMediaPlayer();
@@ -45,7 +52,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.prepareAsync();
-            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+            mediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, "Fallo al con el servidor de radio init", Toast.LENGTH_SHORT).show();
@@ -76,11 +83,11 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         }
     }
 
-    @Nullable
+    /*@Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
+    }*/
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
