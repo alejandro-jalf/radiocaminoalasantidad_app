@@ -5,4 +5,6 @@
     <string name="description_image">Logo de la radio</string>
     <string name="empty"></string>
     <string name="example_title">Jesus mi fiel amigo</string>
+    <string name="textVolume">Volumen</string>
+    <string name="listeners">0</string>
 </resources>

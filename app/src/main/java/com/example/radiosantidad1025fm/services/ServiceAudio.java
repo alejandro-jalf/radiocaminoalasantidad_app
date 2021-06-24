@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,10 +30,13 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     private Context context;
     private Config config;
     private ImageButton buttonPlayStop;
+    private SeekBar barVolume;
+    private float volumen;
 
-    public ServiceAudio(Context context, Config config, ImageButton buttonPlayStop) {
+    public ServiceAudio(Context context, Config config, ImageButton buttonPlayStop, SeekBar barVolume) {
         this.context = context;
         this.config = config;
+        this.barVolume = barVolume;
         this.buttonPlayStop = buttonPlayStop;
         buttonPlayStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,8 +45,11 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
             }
         });
         this.statusAudio = statusInit;
+        this.volumen = 0;
         mediaPlayer = new MediaPlayer();
         initMediaPlayer();
+        Toast.makeText(context, "Estableciendo conexion.......", Toast.LENGTH_LONG).show();
+        setChangeVolume();
     }
 
     private void initMediaPlayer() {
@@ -59,27 +66,45 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         }
     }
 
+    private void setChangeVolume() {
+        barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                volumen = (float) progress/100;
+                //if (statusAudio == statusPlay)
+                mediaPlayer.setVolume(volumen, volumen);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
     public void toggleAudio() {
         if (statusAudio == statusInit)
-            Toast.makeText(context, "Cargando audio.....", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Cargando audio, intentelo en unos segundos mas.....", Toast.LENGTH_SHORT).show();
         else if(statusAudio == statusError) {
             Toast.makeText(context, "Fallo con el servidor de radio", Toast.LENGTH_SHORT).show();
-            mediaPlayer.release();
-            initMediaPlayer();
+            mediaPlayer.prepareAsync();
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
             statusAudio = statusInit;
         }
         else if (statusAudio == statusReady) {
+            // mediaPlayer.setVolume(volumen, volumen);
             statusAudio = statusPlay;
             mediaPlayer.start();
-            buttonPlayStop.setBackgroundResource(R.drawable.ic_baseline_stop_circle_35);
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         } else if (statusAudio == statusStop) {
             mediaPlayer.prepareAsync();
-            Toast.makeText(context, "Preparando para reproducir", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Preparando para reproducir.....", Toast.LENGTH_LONG).show();
             statusAudio = statusInit;
         } else if (statusAudio == statusPlay) {
             statusAudio = statusStop;
             mediaPlayer.stop();
-            buttonPlayStop.setBackgroundResource(R.drawable.ic_baseline_play_circle_filled_35);
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
         }
     }
 
@@ -91,7 +116,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        buttonPlayStop.setBackgroundResource(R.drawable.ic_baseline_play_circle_filled_35);
+        buttonPlayStop.setBackgroundResource(R.drawable.ic_baseline_play_circle_filled_55);
         Toast.makeText(context, "Fallo al cargar audio", Toast.LENGTH_LONG).show();
         statusAudio = statusError;
         return false;
@@ -99,6 +124,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
 
     @Override
     public void onPrepared(MediaPlayer mp) {
+        Toast.makeText(context, "Listo para reproducir", Toast.LENGTH_LONG).show();
         statusAudio = statusReady;
     }
 }

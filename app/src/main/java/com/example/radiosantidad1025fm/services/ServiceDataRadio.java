@@ -1,6 +1,7 @@
 package com.example.radiosantidad1025fm.services;
 
 import android.content.Context;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,13 +22,17 @@ public class ServiceDataRadio {
     private Context context;
     private SwitchMaterial switchMaterial;
     private RequestQueue requestQueue;
+    private JSONObject dataResponse;
+    private TextView titleSong;
+    private TextView textListeners;
 
-    public ServiceDataRadio(Context context, Config configs, SwitchMaterial switchMaterial) {
+    public ServiceDataRadio(Context context, Config configs, SwitchMaterial switchMaterial, TextView titleSong, TextView textListeners) {
         this.context = context;
         this. configs = configs;
         this.switchMaterial = switchMaterial;
+        this.titleSong = titleSong;
+        this.textListeners = textListeners;
         this.requestQueue = Volley.newRequestQueue(context);
-        Toast.makeText(context, "Alggo", Toast.LENGTH_SHORT).show();
     }
 
     public void getDataRadio() {
@@ -35,8 +40,23 @@ public class ServiceDataRadio {
                 Request.Method.GET, configs.getUrlDataRadio(), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(context, "Respuesta: " + response.toString(), Toast.LENGTH_LONG).show();
-                    switchMaterial.setChecked(true);
+                    try {
+                        dataResponse = response.getJSONObject("data");
+                        if (dataResponse.getString("status").equals("Online")) {
+                            switchMaterial.setChecked(true);
+                            switchMaterial.setText("Al aire music");
+                            titleSong.setText(dataResponse.getString("title"));
+                            textListeners.setText(dataResponse.getString("listeners").substring(12));
+                        }
+                        else {
+                            switchMaterial.setChecked(false);
+                            switchMaterial.setText("Fuera del aire");
+                            titleSong.setText("Sin datos de titulo");
+                            textListeners.setText("0");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }, new Response.ErrorListener() {
                 @Override

@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton buttonVolume;
     private SeekBar barVolume;
     private TextView titleSound;
+    private TextView backVolume;
+    private TextView textVolume;
+    private TextView textListeners;
     private SwitchMaterial switchMaterial;
     private int visibleBarVolume;
     private Config config;
@@ -37,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
-        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial);
+        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
         serviceDataRadio.getDataRadio();
         //serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop, barVolume);
     }
 
     private void initComponents() {
@@ -56,16 +59,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         titleSound = findViewById(R.id.titleSound);
+        textListeners = findViewById(R.id.textListeners);
+        backVolume = findViewById(R.id.backgroundVolume);
+        backVolume.setVisibility(View.GONE);
+        textVolume = findViewById(R.id.textVolumen);
+        textVolume.setVisibility(View.GONE);
         barVolume = findViewById(R.id.barVolume);
         barVolume.setVisibility(View.GONE);
+        barVolume.setMax(100);
+        barVolume.setProgress(100);
         visibleBarVolume = barVolume.getVisibility();
     }
 
     private void toggleBarVolume() {
         visibleBarVolume = barVolume.getVisibility();
-        if (visibleBarVolume == View.GONE || visibleBarVolume == View.INVISIBLE)
+        if (visibleBarVolume == View.GONE || visibleBarVolume == View.INVISIBLE) {
             barVolume.setVisibility(View.VISIBLE);
-        else
+            textVolume.setVisibility(View.VISIBLE);
+            backVolume.setVisibility(View.VISIBLE);
+        } else {
             barVolume.setVisibility(View.GONE);
+            textVolume.setVisibility(View.GONE);
+            backVolume.setVisibility(View.GONE);
+        }
     }
 }
