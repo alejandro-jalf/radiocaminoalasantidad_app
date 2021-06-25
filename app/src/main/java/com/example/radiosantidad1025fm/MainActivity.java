@@ -9,10 +9,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.services.ServiceAudio;
 import com.example.radiosantidad1025fm.services.ServiceDataRadio;
+import com.example.radiosantidad1025fm.services.ServiceInternet;
 import com.example.radiosantidad1025fm.services.ServiceTimerAction;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private Config config;
     private ServiceDataRadio serviceDataRadio;
     private ServiceTimerAction serviceTimerAction;
+    private ServiceInternet serviceInternet;
     private ServiceAudio serviceAudio;
     private TextView backgroundInternet;
     private ImageView imageInternet;
@@ -41,14 +44,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initComponents();
         loadInstances();
-    }
-
-    private void loadInstances() {
-        config = new Config();
-        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
-        //serviceDataRadio.getDataRadio();
-        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop, barVolume);
+        verifyConnectionInternet();
+        setEvents();
     }
 
     private void initComponents() {
@@ -57,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         switchMaterial.setEnabled(false);
         buttonPlayStop = findViewById(R.id.buttinPlayStop);
         buttonVolume = findViewById(R.id.buttonVolume);
+        buttonInternet = findViewById(R.id.buttonInternet);
+        buttonInternet.setVisibility(View.GONE);
         buttonVolume.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         titleSound = findViewById(R.id.titleSound);
+        backgroundInternet = findViewById(R.id.backgroundInternet);
+        backgroundInternet.setVisibility(View.GONE);
+        imageInternet = findViewById(R.id.imageInternet);
+        imageInternet.setVisibility(View.GONE);
         textListeners = findViewById(R.id.textListeners);
         backVolume = findViewById(R.id.backgroundVolume);
         backVolume.setVisibility(View.GONE);
@@ -74,6 +77,38 @@ public class MainActivity extends AppCompatActivity {
         barVolume.setMax(100);
         barVolume.setProgress(100);
         visibleBarVolume = barVolume.getVisibility();
+    }
+
+    private void loadInstances() {
+        config = new Config();
+        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
+        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop, barVolume);
+        serviceInternet = new ServiceInternet(getApplicationContext());
+    }
+
+    private void verifyConnectionInternet() {
+        if (!serviceInternet.testInternet()) {
+            buttonInternet.setVisibility(View.VISIBLE);
+            backgroundInternet.setVisibility(View.VISIBLE);
+            imageInternet.setVisibility(View.VISIBLE);
+        } else {
+            buttonInternet.setVisibility(View.GONE);
+            backgroundInternet.setVisibility(View.GONE);
+            imageInternet.setVisibility(View.GONE);
+            Toast.makeText(this, "Sin conexion a internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setEvents() {
+        buttonInternet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonInternet.setVisibility(View.GONE);
+                backgroundInternet.setVisibility(View.GONE);
+                imageInternet.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void toggleBarVolume() {

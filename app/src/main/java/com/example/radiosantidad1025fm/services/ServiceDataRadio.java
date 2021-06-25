@@ -1,6 +1,7 @@
 package com.example.radiosantidad1025fm.services;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,6 +12,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.radiosantidad1025fm.Configs.Config;
+import com.example.radiosantidad1025fm.R;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONException;
@@ -40,18 +42,19 @@ public class ServiceDataRadio {
                 Request.Method.GET, configs.getUrlDataRadio(), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Toast.makeText(context, "Respuesta", Toast.LENGTH_SHORT).show();
                     try {
                         dataResponse = response.getJSONObject("data");
                         if (dataResponse.getString("status").equals("Online")) {
                             switchMaterial.setChecked(true);
                             switchMaterial.setText("Al aire music");
+                            switchMaterial.setTextColor(Color.rgb(0, 200, 83));
                             titleSong.setText(dataResponse.getString("title"));
                             textListeners.setText(dataResponse.getString("listeners").substring(12));
                         }
                         else {
                             switchMaterial.setChecked(false);
                             switchMaterial.setText("Fuera del aire");
+                            switchMaterial.setTextColor(Color.rgb(213, 0, 0));
                             titleSong.setText("Sin datos de titulo");
                             textListeners.setText("0");
                         }
@@ -62,9 +65,11 @@ public class ServiceDataRadio {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Error en la solicitud", Toast.LENGTH_LONG).show();
                     switchMaterial.setChecked(false);
-                    error.printStackTrace();
+                    switchMaterial.setText("Fallos con la red");
+                    switchMaterial.setTextColor(Color.rgb(213, 0, 0));
+                    titleSong.setText("Sin datos de titulo");
+                    textListeners.setText("0");
                 }
             }
         );

@@ -23,7 +23,8 @@
         android:layout_marginTop="14dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="20sp"
+        android:textSize="23sp"
+        android:textColor="@color/online"
         android:text="@string/status_online"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -142,7 +143,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_baseline_fiber_manual_record_40"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/textListeners"
@@ -155,5 +157,38 @@
         app:layout_constraintTop_toTopOf="@id/circleListeners"
         app:layout_constraintEnd_toEndOf="@id/circleListeners"
         app:layout_constraintStart_toStartOf="@id/circleListeners" />
+
+    <TextView
+        android:id="@+id/backgroundInternet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:text=""
+        android:background="@color/whiteAlpha"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageInternet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_wifi_off_130"
+        tools:ignore="VectorDrawableCompat" />
+
+    <Button
+        android:id="@+id/buttonInternet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/textAcecpt"
+        android:background="@color/buttonInfo"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageInternet" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
