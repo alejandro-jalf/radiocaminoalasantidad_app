@@ -1,28 +1,36 @@
 package com.example.radiosantidad1025fm.services;
 
+import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.IBinder;
 import android.os.PowerManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.R;
 
 import java.io.IOException;
 
-public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private final int STATUS_INIT = 3;
     private final int STATUS_ERROR = 2;
     private final int STATUS_PLAY = 1;
     private final int STATUS_STOP = 0;
     private int statusAudio;
-    private MediaPlayer mediaPlayer;
+    protected MediaPlayer mediaPlayer;
     private Context context;
     private Config config;
     private ImageButton buttonPlayStop;
     private float volume;
+    private Intent intent;
+
+    public ServiceAudio() { }
 
     public ServiceAudio(Context context, Config config, ImageButton buttonPlayStop) {
         this.context = context;
@@ -32,6 +40,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         this.volume = 0;
         mediaPlayer = new MediaPlayer();
         initMediaPlayer();
+        intent = new Intent(context, this.getClass());
         Toast.makeText(context, "Estableciendo conexion.......", Toast.LENGTH_SHORT).show();
     }
 
@@ -68,17 +77,10 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
             statusAudio = STATUS_INIT;
         } else if (statusAudio == STATUS_PLAY) {
             statusAudio = STATUS_STOP;
-            mediaPlayer.stop();
-            mediaPlayer.reset();
+            context.stopService(intent);
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
         }
     }
-
-    /*@Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }*/
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -92,7 +94,47 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     public void onPrepared(MediaPlayer mp) {
         Toast.makeText(context, "Iniciando.....", Toast.LENGTH_SHORT).show();
         buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
-        mediaPlayer.start();
+        context.startService(intent);
         statusAudio = STATUS_PLAY;
     }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mediaPlayer.start();
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+    }
+
+    /*private class BackgroundAudio extends Service {
+        @Nullable
+        @Override
+        public IBinder onBind(Intent intent) {
+            return null;
+        }
+
+        @Override
+        public int onStartCommand(Intent intent, int flags, int startId) {
+            mediaPlayer.start();
+            return START_STICKY;
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
+    }*/
 }
