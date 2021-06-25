@@ -86,14 +86,13 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         if (statusAudio == statusInit)
             Toast.makeText(context, "Cargando audio, intentelo en unos segundos mas.....", Toast.LENGTH_SHORT).show();
         else if(statusAudio == statusError) {
-            Toast.makeText(context, "Fallo con el servidor de radio", Toast.LENGTH_SHORT).show();
-            mediaPlayer.prepareAsync();
+            Toast.makeText(context, "Servidor sin conexion", Toast.LENGTH_SHORT).show();
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-            statusAudio = statusInit;
         }
         else if (statusAudio == statusReady) {
             statusAudio = statusPlay;
             mediaPlayer.start();
+            mediaPlayer.seekTo(0);
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         } else if (statusAudio == statusStop) {
             // mediaPlayer.prepareAsync();
@@ -117,7 +116,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         buttonPlayStop.setBackgroundResource(R.drawable.ic_baseline_play_circle_filled_55);
-        Toast.makeText(context, "Fallo al cargar audio", Toast.LENGTH_LONG).show();
+        Toast.makeText(context, "Sin conexion con el servidor", Toast.LENGTH_LONG).show();
         statusAudio = statusError;
         return false;
     }

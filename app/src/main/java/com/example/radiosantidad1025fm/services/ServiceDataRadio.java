@@ -40,6 +40,7 @@ public class ServiceDataRadio {
                 Request.Method.GET, configs.getUrlDataRadio(), null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
+                    Toast.makeText(context, "Respuesta", Toast.LENGTH_SHORT).show();
                     try {
                         dataResponse = response.getJSONObject("data");
                         if (dataResponse.getString("status").equals("Online")) {
@@ -63,6 +64,7 @@ public class ServiceDataRadio {
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(context, "Error en la solicitud", Toast.LENGTH_LONG).show();
                     switchMaterial.setChecked(false);
+                    error.printStackTrace();
                 }
             }
         );

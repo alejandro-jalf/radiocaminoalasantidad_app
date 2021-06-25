@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity {
     private ServiceDataRadio serviceDataRadio;
     private ServiceTimerAction serviceTimerAction;
     private ServiceAudio serviceAudio;
+    private TextView backgroundInternet;
+    private ImageView imageInternet;
+    private Button buttonInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadInstances() {
         config = new Config();
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
-        serviceDataRadio.getDataRadio();
-        //serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
+        //serviceDataRadio.getDataRadio();
+        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
         serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop, barVolume);
     }
 
