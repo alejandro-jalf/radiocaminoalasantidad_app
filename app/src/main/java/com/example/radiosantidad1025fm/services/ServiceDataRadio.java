@@ -70,6 +70,7 @@ public class ServiceDataRadio {
                     switchMaterial.setTextColor(Color.rgb(213, 0, 0));
                     titleSong.setText("Sin datos de titulo");
                     textListeners.setText("0");
+                    error.printStackTrace();
                 }
             }
         );

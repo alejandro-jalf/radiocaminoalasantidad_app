@@ -56,12 +56,6 @@ public class MainActivity extends AppCompatActivity {
         buttonVolume = findViewById(R.id.buttonVolume);
         buttonInternet = findViewById(R.id.buttonInternet);
         buttonInternet.setVisibility(View.GONE);
-        buttonVolume.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toggleBarVolume();
-            }
-        });
         titleSound = findViewById(R.id.titleSound);
         backgroundInternet = findViewById(R.id.backgroundInternet);
         backgroundInternet.setVisibility(View.GONE);
@@ -83,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         config = new Config();
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop, barVolume);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 
@@ -92,15 +86,20 @@ public class MainActivity extends AppCompatActivity {
             buttonInternet.setVisibility(View.VISIBLE);
             backgroundInternet.setVisibility(View.VISIBLE);
             imageInternet.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "Sin conexion a internet", Toast.LENGTH_LONG).show();
         } else {
             buttonInternet.setVisibility(View.GONE);
             backgroundInternet.setVisibility(View.GONE);
             imageInternet.setVisibility(View.GONE);
-            Toast.makeText(this, "Sin conexion a internet", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void setEvents() {
+        buttonVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { toggleBarVolume(); }
+        });
+
         buttonInternet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,6 +107,24 @@ public class MainActivity extends AppCompatActivity {
                 backgroundInternet.setVisibility(View.GONE);
                 imageInternet.setVisibility(View.GONE);
             }
+        });
+
+        buttonPlayStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { serviceAudio.toggleAudio(); }
+        });
+
+        barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                serviceAudio.changeVolume(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
         });
     }
 
