@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         switchMaterial.setEnabled(false);
         buttonPlayStop = findViewById(R.id.buttinPlayStop);
         buttonVolume = findViewById(R.id.buttonVolume);
+        buttonVolume.setVisibility(View.GONE);
         buttonInternet = findViewById(R.id.buttonInternet);
         buttonInternet.setVisibility(View.GONE);
         titleSound = findViewById(R.id.titleSound);

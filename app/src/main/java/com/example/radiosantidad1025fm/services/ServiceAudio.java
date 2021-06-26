@@ -1,12 +1,17 @@
 package com.example.radiosantidad1025fm.services;
 
+import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcelable;
 import android.os.PowerManager;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -16,6 +21,8 @@ import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.R;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.lang.reflect.Field;
 
 public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
     private final int STATUS_INIT = 3;
@@ -29,6 +36,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     private ImageButton buttonPlayStop;
     private float volume;
     private Intent intent;
+    private ActivityManager activityManager;
 
     public ServiceAudio() { }
 
@@ -36,25 +44,33 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         this.context = context;
         this.config = config;
         this.buttonPlayStop = buttonPlayStop;
-        this.statusAudio = STATUS_INIT;
         this.volume = 0;
-        mediaPlayer = new MediaPlayer();
-        initMediaPlayer();
-        intent = new Intent(context, this.getClass());
-        Toast.makeText(context, "Estableciendo conexion.......", Toast.LENGTH_SHORT).show();
+        intent = new Intent(context, ServiceAudio.class);
+        verifyServiceRunnning();
     }
 
-    private void initMediaPlayer() {
+    private void verifyServiceRunnning() {
+        if (isServiceRunning(ServiceAudio.class)) {
+            statusAudio = STATUS_PLAY;
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
+            Toast.makeText(context, "En reproduccion", Toast.LENGTH_SHORT).show();
+        } else {
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
+            statusAudio = STATUS_STOP;
+        }
+    }
+
+    private void initMediaPlayer(Config config) {
         try {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(config.getUrlSound());
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.prepareAsync();
-            mediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Fallo al con el servidor de radio init", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Fallo al con el servidor de radio init", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -64,38 +80,39 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void toggleAudio() {
-        if (statusAudio == STATUS_INIT)
-            Toast.makeText(context, "Cargando audio.......", Toast.LENGTH_SHORT).show();
-        else if(statusAudio == STATUS_ERROR) {
-            Toast.makeText(context, "Servidor sin conexion, intente mas tarde", Toast.LENGTH_LONG).show();
+        if (isServiceRunning(ServiceAudio.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-            mediaPlayer.reset();
-            statusAudio = STATUS_STOP;
-        } else if (statusAudio == STATUS_STOP) {
-            Toast.makeText(context, "Preparando para reproducir.....", Toast.LENGTH_SHORT).show();
-            initMediaPlayer();
-            statusAudio = STATUS_INIT;
-        } else if (statusAudio == STATUS_PLAY) {
-            statusAudio = STATUS_STOP;
             context.stopService(intent);
-            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
+            Toast.makeText(context, "Deteniendo......", Toast.LENGTH_SHORT).show();
+        } else {
+            context.startService(intent);
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         }
+    }
+
+
+
+    private Boolean isServiceRunning(Class<?> serviceClass) {
+        activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName()))
+                return true;
+        }
+        return false;
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
-        buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-        Toast.makeText(context, "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
-        statusAudio = STATUS_ERROR;
+        Toast.makeText(getApplicationContext(), "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
+        mp.reset();
+        context.stopService(intent);
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        Toast.makeText(context, "Iniciando.....", Toast.LENGTH_SHORT).show();
-        buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
-        context.startService(intent);
-        statusAudio = STATUS_PLAY;
+        Toast.makeText(getApplicationContext(), "Reproduciendo.....", Toast.LENGTH_SHORT).show();
+        mp.start();
     }
 
     @Nullable
@@ -106,7 +123,9 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mediaPlayer.start();
+        mediaPlayer = new MediaPlayer();
+        initMediaPlayer(new Config());
+        Log.d("onStart: ", "On start Service");
         return START_STICKY;
     }
 
@@ -116,25 +135,4 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.stop();
         mediaPlayer.reset();
     }
-
-    /*private class BackgroundAudio extends Service {
-        @Nullable
-        @Override
-        public IBinder onBind(Intent intent) {
-            return null;
-        }
-
-        @Override
-        public int onStartCommand(Intent intent, int flags, int startId) {
-            mediaPlayer.start();
-            return START_STICKY;
-        }
-
-        @Override
-        public void onDestroy() {
-            super.onDestroy();
-            mediaPlayer.stop();
-            mediaPlayer.reset();
-        }
-    }*/
 }
