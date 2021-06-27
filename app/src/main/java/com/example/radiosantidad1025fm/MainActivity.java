@@ -16,6 +16,7 @@ import com.example.radiosantidad1025fm.services.ServiceAudio;
 import com.example.radiosantidad1025fm.services.ServiceDataRadio;
 import com.example.radiosantidad1025fm.services.ServiceInternet;
 import com.example.radiosantidad1025fm.services.ServiceTimerAction;
+import com.example.radiosantidad1025fm.utils.VerifyService;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceDataRadio serviceDataRadio;
     private ServiceTimerAction serviceTimerAction;
     private ServiceInternet serviceInternet;
+    private VerifyService verifyService;
     private ServiceAudio serviceAudio;
     private TextView backgroundInternet;
     private ImageView imageInternet;
@@ -50,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initComponents() {
         switchMaterial = findViewById(R.id.switchStatus);
-        switchMaterial.setChecked(true);
+        switchMaterial.setChecked(false);
+        switchMaterial.setText("Cargando....");
         switchMaterial.setEnabled(false);
         buttonPlayStop = findViewById(R.id.buttinPlayStop);
         buttonVolume = findViewById(R.id.buttonVolume);
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         buttonInternet = findViewById(R.id.buttonInternet);
         buttonInternet.setVisibility(View.GONE);
         titleSound = findViewById(R.id.titleSound);
+        titleSound.setText("Cargando....");
         backgroundInternet = findViewById(R.id.backgroundInternet);
         backgroundInternet.setVisibility(View.GONE);
         imageInternet = findViewById(R.id.imageInternet);
@@ -76,9 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
-        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners);
+        verifyService = new VerifyService(getApplicationContext());
+        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners, buttonPlayStop, verifyService);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, buttonPlayStop);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, buttonPlayStop);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 

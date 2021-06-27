@@ -6,57 +6,66 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcelable;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
-
 import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.R;
+import com.example.radiosantidad1025fm.utils.VerifyService;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Field;
 
-public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
+public class ServiceAudio
+        extends
+            Service
+        implements
+            MediaPlayer.OnPreparedListener,
+            MediaPlayer.OnErrorListener,
+            MediaPlayer.OnCompletionListener {
     private final int STATUS_INIT = 3;
-    private final int STATUS_ERROR = 2;
-    private final int STATUS_PLAY = 1;
-    private final int STATUS_STOP = 0;
+    private int STATUS_ERROR = 2;
+    private int STATUS_PLAY = 1;
+    private int STATUS_STOP = 0;
     private int statusAudio;
+    int statusMediaPlayer;
     protected MediaPlayer mediaPlayer;
     private Context context;
     private Config config;
     private ImageButton buttonPlayStop;
     private float volume;
     private Intent intent;
-    private ActivityManager activityManager;
+    private VerifyService verifyService;
 
     public ServiceAudio() { }
 
-    public ServiceAudio(Context context, Config config, ImageButton buttonPlayStop) {
+    public ServiceAudio(Context context, Config config, VerifyService verifyService, ImageButton buttonPlayStop) {
         this.context = context;
         this.config = config;
         this.buttonPlayStop = buttonPlayStop;
         this.volume = 0;
+        this.verifyService = verifyService;
         intent = new Intent(context, ServiceAudio.class);
         verifyServiceRunnning();
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        final int STATUS_ERROR = 2;
+        final int STATUS_PLAY = 1;
+        int statusMediaPlayer = 0;
+    }
+
     private void verifyServiceRunnning() {
-        if (isServiceRunning(ServiceAudio.class)) {
-            statusAudio = STATUS_PLAY;
+        if (verifyService.isServiceRunning(ServiceAudio.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
             Toast.makeText(context, "En reproduccion", Toast.LENGTH_SHORT).show();
         } else {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-            statusAudio = STATUS_STOP;
         }
     }
 
@@ -80,7 +89,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     }
 
     public void toggleAudio() {
-        if (isServiceRunning(ServiceAudio.class)) {
+        if (verifyService.isServiceRunning(ServiceAudio.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
             context.stopService(intent);
             Toast.makeText(context, "Deteniendo......", Toast.LENGTH_SHORT).show();
@@ -90,29 +99,26 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         }
     }
 
-
-
-    private Boolean isServiceRunning(Class<?> serviceClass) {
-        activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : activityManager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName()))
-                return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(getApplicationContext(), "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
         mp.reset();
-        context.stopService(intent);
+        statusMediaPlayer = STATUS_ERROR;
+        getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
         return false;
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
         Toast.makeText(getApplicationContext(), "Reproduciendo.....", Toast.LENGTH_SHORT).show();
+        statusMediaPlayer = STATUS_PLAY;
         mp.start();
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        Toast.makeText(getApplicationContext(), "Transmicion terminada", Toast.LENGTH_SHORT).show();
+        getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
     }
 
     @Nullable
@@ -125,14 +131,16 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     public int onStartCommand(Intent intent, int flags, int startId) {
         mediaPlayer = new MediaPlayer();
         initMediaPlayer(new Config());
-        Log.d("onStart: ", "On start Service");
+        Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mediaPlayer.stop();
+        if (statusMediaPlayer == STATUS_PLAY)
+            mediaPlayer.stop();
         mediaPlayer.reset();
+        mediaPlayer = null;
     }
 }
