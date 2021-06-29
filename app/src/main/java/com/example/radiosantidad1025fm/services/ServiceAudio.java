@@ -1,31 +1,33 @@
 package com.example.radiosantidad1025fm.services;
 
-import android.app.ActivityManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+
 import com.example.radiosantidad1025fm.Configs.Config;
+import com.example.radiosantidad1025fm.MainActivity;
 import com.example.radiosantidad1025fm.R;
 import com.example.radiosantidad1025fm.utils.VerifyService;
 
 import java.io.IOException;
 
-public class ServiceAudio
-        extends
-            Service
-        implements
-            MediaPlayer.OnPreparedListener,
-            MediaPlayer.OnErrorListener,
-            MediaPlayer.OnCompletionListener {
+public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
     private final int STATUS_INIT = 3;
     private int STATUS_ERROR = 2;
     private int STATUS_PLAY = 1;
@@ -40,6 +42,13 @@ public class ServiceAudio
     private Intent intent;
     private VerifyService verifyService;
 
+    private NotificationCompat.Builder nBuilder;
+    private final int ID_NOTIFICATION = 1996;
+    private final String ID_CHANNEL = "Canal_radio";
+    private final String NAME_CHANNEL = "Canal_radio";
+    private NotificationManager notificationManager;
+    private NotificationChannel channel;
+
     public ServiceAudio() { }
 
     public ServiceAudio(Context context, Config config, VerifyService verifyService, ImageButton buttonPlayStop) {
@@ -50,6 +59,7 @@ public class ServiceAudio
         this.verifyService = verifyService;
         intent = new Intent(context, ServiceAudio.class);
         verifyServiceRunnning();
+        context.stopService(intent);
     }
 
     @Override
@@ -58,6 +68,13 @@ public class ServiceAudio
         final int STATUS_ERROR = 2;
         final int STATUS_PLAY = 1;
         int statusMediaPlayer = 0;
+        int statusAudio;
+
+        notificationManager =  (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new  NotificationChannel(ID_CHANNEL, NAME_CHANNEL, NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void verifyServiceRunnning() {
@@ -99,11 +116,50 @@ public class ServiceAudio
         }
     }
 
+    private NotificationCompat.Builder createNotification(String Status, NotificationCompat.Builder notificationBuilder) {
+        Log.d("CreateNoti", Status);
+        int iconToggle = Status.equals("Play")
+                ? R.drawable.ic_baseline_stop_circle_30
+                : R.drawable.ic_baseline_play_circle_filled_30;
+        String statusSound = Status.equals("Play") ? "Reproduciendo" : "Detenido";
+        String statusToggle = Status.equals("Play") ? "Detener" : "Reproducir";
+
+        notificationBuilder = new NotificationCompat.Builder(this, ID_CHANNEL);
+        notificationBuilder.setAutoCancel(false);
+        notificationBuilder.setSmallIcon(R.drawable.logo);
+        notificationBuilder.setTicker("Escuchando");
+        notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
+        notificationBuilder.setWhen(System.currentTimeMillis());
+        notificationBuilder.setContentTitle("Radio Santidad 102.5 FM");
+        notificationBuilder.setContentText("La expresion de la verdad");
+        notificationBuilder.setContentInfo(statusSound);
+        notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        notificationBuilder.setOnlyAlertOnce(true);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        Intent intentToggle = new Intent(getApplicationContext(), ServiceAudio.class);
+        intentToggle.putExtra("event", Status);
+        PendingIntent pendingIntentToggle = PendingIntent.getService(getApplicationContext(), 0, intentToggle, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Intent intentClose = new Intent(getApplicationContext(), ServiceAudio.class);
+        intentClose.putExtra("event", "Close");
+        PendingIntent pendingIntentClose = PendingIntent.getService(getApplicationContext(), 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.addAction(iconToggle, statusToggle, pendingIntentToggle);
+        notificationBuilder.addAction(R.drawable.ic_baseline_close_30, "Cerrar", pendingIntentClose);
+
+        return  notificationBuilder;
+    }
+
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(getApplicationContext(), "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
-        mp.reset();
         statusMediaPlayer = STATUS_ERROR;
+
+        nBuilder = createNotification("Stop", nBuilder);
         getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
         return false;
     }
@@ -113,6 +169,8 @@ public class ServiceAudio
         Toast.makeText(getApplicationContext(), "Reproduciendo.....", Toast.LENGTH_SHORT).show();
         statusMediaPlayer = STATUS_PLAY;
         mp.start();
+
+        notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
     }
 
     @Override
@@ -129,18 +187,49 @@ public class ServiceAudio
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mediaPlayer = new MediaPlayer();
-        initMediaPlayer(new Config());
-        Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
+        if (intent.getExtras() != null) {
+            String statusActual = intent.getExtras().getString("event");
+            Log.d("OnStar ", statusActual);
+            if (statusActual.equals("Play")) {
+                statusAudio = STATUS_PLAY;
+                nBuilder = createNotification("Stop", nBuilder);
+                notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+                getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
+            } else if(statusActual.equals("Stop")) {
+                statusAudio = STATUS_STOP;
+                nBuilder = createNotification("Play", nBuilder);
+                mediaPlayer = new MediaPlayer();
+                initMediaPlayer(new Config());
+            } else if(statusActual.equals("Close")) {
+                statusAudio = STATUS_INIT;
+                getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
+            }
+            Toast.makeText(getApplicationContext(), "Recibido: " + statusActual, Toast.LENGTH_LONG).show();
+        } else {
+            Log.d("OnStar ", "Inicial");
+            nBuilder = createNotification("Play", nBuilder);
+            mediaPlayer = new MediaPlayer();
+            initMediaPlayer(new Config());
+            Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
+        }
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("OnDestroy ", "__" + statusAudio);
         if (statusMediaPlayer == STATUS_PLAY)
             mediaPlayer.stop();
-        mediaPlayer.reset();
+        if (mediaPlayer != null)
+            mediaPlayer.reset();
         mediaPlayer = null;
+
+        nBuilder = createNotification("Stop", nBuilder);
+        nBuilder.setContentInfo("Detenido");
+        if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR)
+            notificationManager.cancel(ID_NOTIFICATION);
+        else
+            notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
     }
 }
