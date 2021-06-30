@@ -2,6 +2,7 @@ package com.example.radiosantidad1025fm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,11 +42,13 @@ public class MainActivity extends AppCompatActivity {
     private VerifyService verifyService;
     private ServiceAudio serviceAudio;
     private ServiceNotification serviceNotification;
+    private Intent intentAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.intentAudio = new Intent(getApplicationContext(), ServiceAudio.class);
         initComponents();
         loadInstances();
         verifyConnectionInternet();
@@ -85,8 +88,8 @@ public class MainActivity extends AppCompatActivity {
         serviceNotification = new ServiceNotification(getApplicationContext());
         verifyService = new VerifyService(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners, buttonPlayStop, verifyService);
-        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, buttonPlayStop, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification,buttonPlayStop);
+        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, buttonPlayStop, buttonVolume, barVolume, 5000);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification,buttonPlayStop, buttonVolume, barVolume);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 
@@ -126,7 +129,9 @@ public class MainActivity extends AppCompatActivity {
         barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                serviceAudio.changeVolume(progress);
+                intentAudio.putExtra("event", "Volume");
+                intentAudio.putExtra("volume", (float) progress/100);
+                startService(intentAudio);
             }
 
             @Override

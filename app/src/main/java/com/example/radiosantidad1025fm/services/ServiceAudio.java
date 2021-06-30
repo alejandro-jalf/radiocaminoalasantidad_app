@@ -16,7 +16,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -39,6 +41,8 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     private Context context;
     private Config config;
     private ImageButton buttonPlayStop;
+    private ImageButton buttonVolume;
+    private SeekBar barVolume;
     private float volume;
     private Intent intent;
     private VerifyService verifyService;
@@ -46,13 +50,15 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
 
     public ServiceAudio() { }
 
-    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ImageButton buttonPlayStop) {
+    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ImageButton buttonPlayStop, ImageButton buttonVolume, SeekBar barVolume) {
         this.serviceNotification = serviceNotification;
         this.context = context;
         this.config = config;
         this.buttonPlayStop = buttonPlayStop;
+        this.buttonVolume = buttonVolume;
         this.volume = 0;
         this.verifyService = verifyService;
+        this.barVolume = barVolume;
         intent = new Intent(context, ServiceAudio.class);
         verifyServiceRunnning();
     }
@@ -71,7 +77,9 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         if (verifyService.isServiceRunning(ServiceAudio.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
             Toast.makeText(context, "En reproduccion", Toast.LENGTH_SHORT).show();
+            buttonVolume.setVisibility(View.VISIBLE);
         } else {
+            buttonVolume.setVisibility(View.GONE);
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
         }
     }
@@ -90,15 +98,13 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         }
     }
 
-    public void changeVolume(int progress) {
-        volume = (float) progress/100;
-        mediaPlayer.setVolume(volume, volume);
-    }
-
     public void toggleAudio() {
         if (verifyService.isServiceRunning(ServiceAudio.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
             context.stopService(intent);
+            if (barVolume.getVisibility() == View.VISIBLE)
+                buttonVolume.performClick();
+            buttonVolume.setVisibility(View.GONE);
             Toast.makeText(context, "Deteniendo......", Toast.LENGTH_SHORT).show();
         } else {
             context.startService(intent);
@@ -151,6 +157,10 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
             } else if(statusActual.equals("Close")) {
                 statusAudio = STATUS_INIT;
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
+            } else if (statusActual.equals("Volume")){
+                volume = intent.getExtras().getFloat("volume");
+                if (mediaPlayer != null)
+                    mediaPlayer.setVolume(volume, volume);
             }
         } else {
             serviceNotification.showNotification("Load");
