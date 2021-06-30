@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Icon;
@@ -137,8 +138,8 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
 
         notificationBuilder = new NotificationCompat.Builder(this, ID_CHANNEL);
         notificationBuilder.setAutoCancel(false);
-        notificationBuilder.setSmallIcon(R.drawable.logo);
-        notificationBuilder.setTicker("Escuchando");
+        notificationBuilder.setSmallIcon(R.mipmap.ic_logo);
+        notificationBuilder.setTicker("Radio Santidad");
         notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
         notificationBuilder.setWhen(System.currentTimeMillis());
         notificationBuilder.setContentTitle("Radio Santidad 102.5 FM");
@@ -148,7 +149,9 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         notificationBuilder.setOnlyAlertOnce(true);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = TaskStackBuilder.create(getApplicationContext())
+                .addNextIntent(intent)
+                .getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentToggle = new Intent(getApplicationContext(), ServiceAudio.class);
         intentToggle.putExtra("event", Status);
