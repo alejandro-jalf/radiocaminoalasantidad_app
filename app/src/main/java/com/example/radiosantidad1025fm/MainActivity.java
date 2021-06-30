@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         serviceNotification = new ServiceNotification(getApplicationContext());
         verifyService = new VerifyService(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners, buttonPlayStop, verifyService);
-        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, 5000);
+        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, buttonPlayStop, 5000);
         serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification,buttonPlayStop);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
