@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.radiosantidad1025fm.Configs.Config;
 import com.example.radiosantidad1025fm.services.ServiceAudio;
 import com.example.radiosantidad1025fm.services.ServiceDataRadio;
+import com.example.radiosantidad1025fm.services.ServiceInstanciasComponents;
 import com.example.radiosantidad1025fm.services.ServiceInternet;
 import com.example.radiosantidad1025fm.services.ServiceNotification;
 import com.example.radiosantidad1025fm.services.ServiceTimerAction;
@@ -23,25 +24,26 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton buttonPlayStop;
-    private ImageButton buttonVolume;
-    private ImageView imageInternet;
-    private TextView titleSound;
-    private TextView backVolume;
-    private TextView textVolume;
-    private TextView textListeners;
-    private TextView backgroundInternet;
-    private Button buttonInternet;
-    private SeekBar barVolume;
-    private SwitchMaterial switchMaterial;
-    private int visibleBarVolume;
-    private Config config;
-    private ServiceDataRadio serviceDataRadio;
+    private ServiceInstanciasComponents serviceInstanciasComponents;
+    private ServiceNotification serviceNotification;
     private ServiceTimerAction serviceTimerAction;
+    private ServiceDataRadio serviceDataRadio;
     private ServiceInternet serviceInternet;
     private VerifyService verifyService;
     private ServiceAudio serviceAudio;
-    private ServiceNotification serviceNotification;
+    private Config config;
+    private Button buttonInternet;
+    private ImageButton buttonPlayStop;
+    private ImageButton buttonVolume;
+    private ImageView imageInternet;
+    private TextView backgroundInternet;
+    private TextView textListeners;
+    private TextView titleSound;
+    private TextView backVolume;
+    private TextView textVolume;
+    private SeekBar barVolume;
+    private SwitchMaterial switchMaterial;
+    private int visibleBarVolume;
     private Intent intentAudio;
 
     @Override
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         this.intentAudio = new Intent(getApplicationContext(), ServiceAudio.class);
         initComponents();
         loadInstances();
+        serviceTimerAction.initTask();
         verifyConnectionInternet();
         setEvents();
     }
@@ -85,11 +88,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
-        serviceNotification = new ServiceNotification(getApplicationContext());
+        serviceInstanciasComponents = new ServiceInstanciasComponents();
+        serviceInstanciasComponents.setBarVolume(barVolume);
+        serviceInstanciasComponents.setButtonPlayStop(buttonPlayStop);
+        serviceInstanciasComponents.setButtonVolume(buttonVolume);
+        serviceInstanciasComponents.setSwitchMaterial(switchMaterial);
+        serviceInstanciasComponents.setTextListeners(textListeners);
+        serviceInstanciasComponents.setTitleSound(titleSound);
+
         verifyService = new VerifyService(getApplicationContext());
-        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, switchMaterial, titleSound, textListeners, buttonPlayStop, verifyService);
-        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, buttonPlayStop, buttonVolume, barVolume, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification,buttonPlayStop, buttonVolume, barVolume);
+        serviceNotification = new ServiceNotification(getApplicationContext());
+        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
+        serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
+        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification, serviceInstanciasComponents);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 

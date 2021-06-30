@@ -23,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServiceDataRadio {
+    private ServiceInstanciasComponents serviceInstanciasComponents;
+    private VerifyService verifyService;
     private Config configs;
     private JsonObjectRequest jsonObjectRequest = null;
     private Context context;
@@ -32,25 +34,17 @@ public class ServiceDataRadio {
     private TextView titleSong;
     private TextView textListeners;
     private ImageButton buttonPlayStop;
-    private VerifyService verifyService;
 
-    public ServiceDataRadio(
-            Context context,
-            Config configs,
-            SwitchMaterial switchMaterial,
-            TextView titleSong,
-            TextView textListeners,
-            ImageButton buttonPlayStop,
-            VerifyService verifyService
-    ) {
+    public ServiceDataRadio(Context context, Config configs, VerifyService verifyService, ServiceInstanciasComponents serviceInstanciasComponents) {
         this.context = context;
-        this. configs = configs;
-        this.switchMaterial = switchMaterial;
-        this.titleSong = titleSong;
-        this.textListeners = textListeners;
-        this.requestQueue = Volley.newRequestQueue(context);
+        this.configs = configs;
         this.verifyService = verifyService;
-        this. buttonPlayStop = buttonPlayStop;
+        this.serviceInstanciasComponents = serviceInstanciasComponents;
+        this.switchMaterial = serviceInstanciasComponents.getSwitchMaterial();
+        this.buttonPlayStop = serviceInstanciasComponents.getButtonPlayStop();
+        this.textListeners = serviceInstanciasComponents.getTextListeners();
+        this.titleSong = serviceInstanciasComponents.getTitleSound();
+        this.requestQueue = Volley.newRequestQueue(context);
     }
 
     public void getDataRadio() {

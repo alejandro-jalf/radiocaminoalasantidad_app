@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServiceTimerAction {
+    private ServiceInstanciasComponents serviceInstanciasComponents;
     private ServiceDataRadio serviceDataRadio;
     private VerifyService verifyService;
     private ImageButton buttonPlayStop;
@@ -22,14 +23,18 @@ public class ServiceTimerAction {
     private final Handler handler = new Handler();
     private Timer timer;
 
-    public ServiceTimerAction(ServiceDataRadio serviceDataRadio, VerifyService verifyService, ImageButton buttonPlayStop, ImageButton buttonVolume, SeekBar barVolume, int time) {
+    public ServiceTimerAction(ServiceDataRadio serviceDataRadio, VerifyService verifyService, ServiceInstanciasComponents serviceInstanciasComponents, int time) {
         this.serviceDataRadio = serviceDataRadio;
         this.verifyService = verifyService;
-        this.buttonPlayStop = buttonPlayStop;
-        this.buttonVolume = buttonVolume;
-        this.barVolume = barVolume;
+        this.serviceInstanciasComponents = serviceInstanciasComponents;
+        this.buttonPlayStop = serviceInstanciasComponents.getButtonPlayStop();
+        this.buttonVolume = serviceInstanciasComponents.getButtonVolume();
+        this.barVolume = serviceInstanciasComponents.getBarVolume();
         this.time = time;
         this.timer = new Timer();
+    }
+
+    public void initTask() {
         taskRun();
     }
 

@@ -32,12 +32,15 @@ import java.io.IOException;
 
 public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener {
     private final int STATUS_INIT = 3;
-    private int STATUS_ERROR = 2;
-    private int STATUS_PLAY = 1;
-    private int STATUS_STOP = 0;
+    private final int STATUS_ERROR = 2;
+    private final int STATUS_PLAY = 1;
+    private final int STATUS_STOP = 0;
     private int statusAudio;
-    int statusMediaPlayer;
-    protected MediaPlayer mediaPlayer;
+    private int statusMediaPlayer;
+    private ServiceInstanciasComponents serviceInstanciasComponents;
+    private ServiceNotification serviceNotification;
+    private VerifyService verifyService;
+    private MediaPlayer mediaPlayer;
     private Context context;
     private Config config;
     private ImageButton buttonPlayStop;
@@ -45,31 +48,26 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     private SeekBar barVolume;
     private float volume;
     private Intent intent;
-    private VerifyService verifyService;
-    private ServiceNotification serviceNotification;
 
     public ServiceAudio() { }
 
-    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ImageButton buttonPlayStop, ImageButton buttonVolume, SeekBar barVolume) {
-        this.serviceNotification = serviceNotification;
+    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ServiceInstanciasComponents serviceInstanciasComponents) {
         this.context = context;
-        this.config = config;
-        this.buttonPlayStop = buttonPlayStop;
-        this.buttonVolume = buttonVolume;
-        this.volume = 0;
         this.verifyService = verifyService;
-        this.barVolume = barVolume;
+        this.serviceNotification = serviceNotification;
+        this.serviceInstanciasComponents = serviceInstanciasComponents;
+        this.buttonPlayStop = serviceInstanciasComponents.getButtonPlayStop();
+        this.buttonVolume = serviceInstanciasComponents.getButtonVolume();
+        this.barVolume = serviceInstanciasComponents.getBarVolume();
         intent = new Intent(context, ServiceAudio.class);
+        this.volume = 0;
         verifyServiceRunnning();
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        final int STATUS_ERROR = 2;
-        final int STATUS_PLAY = 1;
-        int statusMediaPlayer = 0;
-        int statusAudio;
+        this.config = new Config();
         serviceNotification = new ServiceNotification(getApplicationContext());
     }
 
@@ -152,7 +150,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
                 statusAudio = STATUS_STOP;
                 serviceNotification.showNotification("Load");
                 mediaPlayer = new MediaPlayer();
-                initMediaPlayer(new Config());
+                initMediaPlayer(config);
                 Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
             } else if(statusActual.equals("Close")) {
                 statusAudio = STATUS_INIT;
@@ -165,7 +163,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         } else {
             serviceNotification.showNotification("Load");
             mediaPlayer = new MediaPlayer();
-            initMediaPlayer(new Config());
+            initMediaPlayer(config);
             Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
         }
         return START_STICKY;
