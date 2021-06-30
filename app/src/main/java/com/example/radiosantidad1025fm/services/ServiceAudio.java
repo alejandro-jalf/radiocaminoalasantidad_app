@@ -42,17 +42,12 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     private float volume;
     private Intent intent;
     private VerifyService verifyService;
-
-    private NotificationCompat.Builder nBuilder;
-    private final int ID_NOTIFICATION = 1996;
-    private final String ID_CHANNEL = "Canal_radio";
-    private final String NAME_CHANNEL = "Canal_radio";
-    private NotificationManager notificationManager;
-    private NotificationChannel channel;
+    private ServiceNotification serviceNotification;
 
     public ServiceAudio() { }
 
-    public ServiceAudio(Context context, Config config, VerifyService verifyService, ImageButton buttonPlayStop) {
+    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ImageButton buttonPlayStop) {
+        this.serviceNotification = serviceNotification;
         this.context = context;
         this.config = config;
         this.buttonPlayStop = buttonPlayStop;
@@ -69,12 +64,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         final int STATUS_PLAY = 1;
         int statusMediaPlayer = 0;
         int statusAudio;
-
-        notificationManager =  (NotificationManager) getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            channel = new  NotificationChannel(ID_CHANNEL, NAME_CHANNEL, NotificationManager.IMPORTANCE_HIGH);
-            notificationManager.createNotificationChannel(channel);
-        }
+        serviceNotification = new ServiceNotification(getApplicationContext());
     }
 
     private void verifyServiceRunnning() {
@@ -116,66 +106,10 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         }
     }
 
-    private NotificationCompat.Builder createNotification(String Status, NotificationCompat.Builder notificationBuilder) {
-        int iconToggle;
-        String statusSound;
-        String statusToggle;
-
-        if (Status.equals("Play")) {
-            iconToggle = R.drawable.ic_baseline_stop_circle_30;
-            statusSound = "Reproduciendo";
-            statusToggle = "Detener";
-        } else if (Status.equals("Stop")) {
-            iconToggle = R.drawable.ic_baseline_play_circle_filled_30;
-            statusSound = "Detenido";
-            statusToggle = "Reproducir";
-        } else {
-            iconToggle = R.drawable.ic_baseline_access_time_filled_30;
-            statusSound = "Cargando";
-            statusToggle = "Espere....";
-        }
-
-        notificationBuilder = new NotificationCompat.Builder(this, ID_CHANNEL);
-        notificationBuilder.setAutoCancel(false);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_logo);
-        notificationBuilder.setTicker("Radio Santidad");
-        notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
-        notificationBuilder.setWhen(System.currentTimeMillis());
-        notificationBuilder.setContentTitle("Radio Santidad 102.5 FM");
-        notificationBuilder.setContentText("La expresion de la verdad");
-        notificationBuilder.setContentInfo(statusSound);
-        notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-        notificationBuilder.setOnlyAlertOnce(true);
-        notificationBuilder.setOngoing(true);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = TaskStackBuilder.create(getApplicationContext())
-                .addNextIntent(intent)
-                .getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent intentToggle = new Intent(getApplicationContext(), ServiceAudio.class);
-        intentToggle.putExtra("event", Status);
-        intentToggle.setAction("toggle");
-        PendingIntent pendingIntentToggle = PendingIntent.getService(getApplicationContext(), 0, intentToggle, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent intentClose = new Intent(getApplicationContext(), ServiceAudio.class);
-        intentClose.putExtra("event", "Close");
-        intentClose.setAction("Close");
-        PendingIntent pendingIntentClose = PendingIntent.getService(getApplicationContext(), 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        notificationBuilder.setContentIntent(pendingIntent);
-        notificationBuilder.addAction(iconToggle, statusToggle, pendingIntentToggle);
-        notificationBuilder.addAction(R.drawable.ic_baseline_close_30, "Cerrar", pendingIntentClose);
-
-        return  notificationBuilder;
-    }
-
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(getApplicationContext(), "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
         statusMediaPlayer = STATUS_ERROR;
-
-        nBuilder = createNotification("Stop", nBuilder);
         getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
         return false;
     }
@@ -185,9 +119,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         Toast.makeText(getApplicationContext(), "Reproduciendo.....", Toast.LENGTH_SHORT).show();
         statusMediaPlayer = STATUS_PLAY;
         mp.start();
-
-        nBuilder = createNotification("Play", nBuilder);
-        notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+        serviceNotification.showNotification("Play");
     }
 
     @Override
@@ -208,13 +140,11 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
             String statusActual = intent.getExtras().getString("event");
             if (statusActual.equals("Play")) {
                 statusAudio = STATUS_PLAY;
-                nBuilder = createNotification("Stop", nBuilder);
-                notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+                serviceNotification.showNotification("Stop");
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
             } else if(statusActual.equals("Stop")) {
                 statusAudio = STATUS_STOP;
-                nBuilder = createNotification("Load", nBuilder);
-                notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+                serviceNotification.showNotification("Load");
                 mediaPlayer = new MediaPlayer();
                 initMediaPlayer(new Config());
                 Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
@@ -223,8 +153,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
             }
         } else {
-            nBuilder = createNotification("Load", nBuilder);
-            notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+            serviceNotification.showNotification("Load");
             mediaPlayer = new MediaPlayer();
             initMediaPlayer(new Config());
             Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
@@ -239,11 +168,11 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         if (mediaPlayer != null) mediaPlayer.reset();
         mediaPlayer = null;
 
-        nBuilder = createNotification("Stop", nBuilder);
-        nBuilder.setContentInfo("Detenido");
-        if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR)
-            notificationManager.cancel(ID_NOTIFICATION);
+        if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR) {
+            serviceNotification.hiddeNotification();
+            serviceNotification = null;
+        }
         else
-            notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
+            serviceNotification.showNotification("Stop");
     }
 }
