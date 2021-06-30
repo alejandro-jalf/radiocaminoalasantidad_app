@@ -7,5 +7,13 @@
     <string name="example_title">Jesus mi fiel amigo</string>
     <string name="textVolume">Volumen</string>
     <string name="textAcecpt">Aceptar</string>
+    <string name="textItemContacto">Contactos</string>
     <string name="listeners">0</string>
+    <string name="contactRadio">Contactos de la radio</string>
+    <string name="contactEncargado">Encargado: David Dominguez Aguirre</string>
+    <string name="faceRadio">Radio Santidad</string>
+    <string name="whatRadio">+52 924 133 7512</string>
+    <string name="callRadio">+52 924 131 9920</string>
+    <string name="whatEncargado">+52 924 148 7270</string>
+    <string name="callEncargado">+52 924 148 7270</string>
 </resources>

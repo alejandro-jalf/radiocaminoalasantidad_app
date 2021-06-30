@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RadioSantidad1025FM">
+        <activity android:name=".views.Contacto"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".services.ServiceAudio"/>
+
+        <service android:name=".services.ServiceAudio" />
     </application>
 
 </manifest>

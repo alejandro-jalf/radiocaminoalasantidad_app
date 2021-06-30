@@ -51,7 +51,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
 
     public ServiceAudio() { }
 
-    public ServiceAudio(Context context, Config config, VerifyService verifyService, ServiceNotification serviceNotification, ServiceInstanciasComponents serviceInstanciasComponents) {
+    public ServiceAudio(Context context, VerifyService verifyService, ServiceNotification serviceNotification, ServiceInstanciasComponents serviceInstanciasComponents) {
         this.context = context;
         this.verifyService = verifyService;
         this.serviceNotification = serviceNotification;

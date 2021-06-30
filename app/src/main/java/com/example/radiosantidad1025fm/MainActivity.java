@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -20,6 +22,7 @@ import com.example.radiosantidad1025fm.services.ServiceInternet;
 import com.example.radiosantidad1025fm.services.ServiceNotification;
 import com.example.radiosantidad1025fm.services.ServiceTimerAction;
 import com.example.radiosantidad1025fm.utils.VerifyService;
+import com.example.radiosantidad1025fm.views.Contacto;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +47,9 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar barVolume;
     private SwitchMaterial switchMaterial;
     private int visibleBarVolume;
+    private int idItemMenu;
     private Intent intentAudio;
+    private Intent intentContacto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,22 @@ public class MainActivity extends AppCompatActivity {
         serviceTimerAction.initTask();
         verifyConnectionInternet();
         setEvents();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.opciones, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        idItemMenu = item.getItemId();
+        if (idItemMenu == R.id.itemContacto) {
+            intentContacto = new Intent(this, Contacto.class);
+            startActivity(intentContacto);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initComponents() {
@@ -100,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         serviceNotification = new ServiceNotification(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), config, verifyService, serviceNotification, serviceInstanciasComponents);
+        serviceAudio = new ServiceAudio(getBaseContext(), verifyService, serviceNotification, serviceInstanciasComponents);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 
