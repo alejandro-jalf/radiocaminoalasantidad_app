@@ -117,12 +117,23 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     }
 
     private NotificationCompat.Builder createNotification(String Status, NotificationCompat.Builder notificationBuilder) {
-        Log.d("CreateNoti", Status);
-        int iconToggle = Status.equals("Play")
-                ? R.drawable.ic_baseline_stop_circle_30
-                : R.drawable.ic_baseline_play_circle_filled_30;
-        String statusSound = Status.equals("Play") ? "Reproduciendo" : "Detenido";
-        String statusToggle = Status.equals("Play") ? "Detener" : "Reproducir";
+        int iconToggle;
+        String statusSound;
+        String statusToggle;
+
+        if (Status.equals("Play")) {
+            iconToggle = R.drawable.ic_baseline_stop_circle_30;
+            statusSound = "Reproduciendo";
+            statusToggle = "Detener";
+        } else if (Status.equals("Stop")) {
+            iconToggle = R.drawable.ic_baseline_play_circle_filled_30;
+            statusSound = "Detenido";
+            statusToggle = "Reproducir";
+        } else {
+            iconToggle = R.drawable.ic_baseline_access_time_filled_30;
+            statusSound = "Cargando";
+            statusToggle = "Espere....";
+        }
 
         notificationBuilder = new NotificationCompat.Builder(this, ID_CHANNEL);
         notificationBuilder.setAutoCancel(false);
@@ -137,14 +148,16 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         notificationBuilder.setOnlyAlertOnce(true);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentToggle = new Intent(getApplicationContext(), ServiceAudio.class);
         intentToggle.putExtra("event", Status);
+        intentToggle.setAction("toggle");
         PendingIntent pendingIntentToggle = PendingIntent.getService(getApplicationContext(), 0, intentToggle, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intentClose = new Intent(getApplicationContext(), ServiceAudio.class);
         intentClose.putExtra("event", "Close");
+        intentClose.setAction("Close");
         PendingIntent pendingIntentClose = PendingIntent.getService(getApplicationContext(), 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationBuilder.setContentIntent(pendingIntent);
@@ -170,6 +183,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         statusMediaPlayer = STATUS_PLAY;
         mp.start();
 
+        nBuilder = createNotification("Play", nBuilder);
         notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
     }
 
@@ -189,7 +203,6 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getExtras() != null) {
             String statusActual = intent.getExtras().getString("event");
-            Log.d("OnStar ", statusActual);
             if (statusActual.equals("Play")) {
                 statusAudio = STATUS_PLAY;
                 nBuilder = createNotification("Stop", nBuilder);
@@ -197,17 +210,18 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
             } else if(statusActual.equals("Stop")) {
                 statusAudio = STATUS_STOP;
-                nBuilder = createNotification("Play", nBuilder);
+                nBuilder = createNotification("Load", nBuilder);
+                notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
                 mediaPlayer = new MediaPlayer();
                 initMediaPlayer(new Config());
+                Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
             } else if(statusActual.equals("Close")) {
                 statusAudio = STATUS_INIT;
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
             }
-            Toast.makeText(getApplicationContext(), "Recibido: " + statusActual, Toast.LENGTH_LONG).show();
         } else {
-            Log.d("OnStar ", "Inicial");
-            nBuilder = createNotification("Play", nBuilder);
+            nBuilder = createNotification("Load", nBuilder);
+            notificationManager.notify(ID_NOTIFICATION, nBuilder.build());
             mediaPlayer = new MediaPlayer();
             initMediaPlayer(new Config());
             Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
@@ -218,14 +232,11 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d("OnDestroy ", "__" + statusAudio);
-        if (statusMediaPlayer == STATUS_PLAY)
-            mediaPlayer.stop();
-        if (mediaPlayer != null)
-            mediaPlayer.reset();
+        if (statusMediaPlayer == STATUS_PLAY) mediaPlayer.stop();
+        if (mediaPlayer != null) mediaPlayer.reset();
         mediaPlayer = null;
 
-        nBuilder = createNotification("Stop", nBuilder);
+        if (nBuilder == null) nBuilder = createNotification("Stop", nBuilder);
         nBuilder.setContentInfo("Detenido");
         if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR)
             notificationManager.cancel(ID_NOTIFICATION);
