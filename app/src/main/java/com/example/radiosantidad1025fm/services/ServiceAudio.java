@@ -60,7 +60,6 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         this.verifyService = verifyService;
         intent = new Intent(context, ServiceAudio.class);
         verifyServiceRunnning();
-        context.stopService(intent);
     }
 
     @Override
@@ -147,6 +146,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         notificationBuilder.setContentInfo(statusSound);
         notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         notificationBuilder.setOnlyAlertOnce(true);
+        notificationBuilder.setOngoing(true);
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         PendingIntent pendingIntent = TaskStackBuilder.create(getApplicationContext())
@@ -239,7 +239,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         if (mediaPlayer != null) mediaPlayer.reset();
         mediaPlayer = null;
 
-        if (nBuilder == null) nBuilder = createNotification("Stop", nBuilder);
+        nBuilder = createNotification("Stop", nBuilder);
         nBuilder.setContentInfo("Detenido");
         if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR)
             notificationManager.cancel(ID_NOTIFICATION);
