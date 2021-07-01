@@ -16,4 +16,8 @@
     <string name="callRadio">+52 924 131 9920</string>
     <string name="whatEncargado">+52 924 148 7270</string>
     <string name="callEncargado">+52 924 148 7270</string>
+    <string name="optionCall">Llamar</string>
+    <string name="optionCopy">Copiar</string>
+    <string name="optionOpen">Abrir</string>
+    <string name="optionMessage">Mensaje</string>
 </resources>

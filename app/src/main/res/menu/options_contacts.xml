@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/grCall">
+        <item
+            android:id="@+id/optionCall"
+            android:icon="@drawable/ic_baseline_call_30"
+            android:title="@string/optionCall"/>
+    </group>
+
+    <group android:id="@+id/grOpen">
+        <item
+            android:id="@+id/optionOpen"
+            android:icon="@drawable/ic_baseline_open_in_new_30"
+            android:title="@string/optionOpen"/>
+    </group>
+
+    <group android:id="@+id/grCopy">
+        <item
+            android:id="@+id/optionCopy"
+            android:icon="@drawable/ic_baseline_content_copy_30"
+            android:title="@string/optionCopy"/>
+    </group>
+
+    <group android:id="@+id/grMessage">
+        <item
+            android:id="@+id/optionMessage"
+            android:icon="@drawable/ic_baseline_message_30"
+            android:title="@string/optionMessage"/>
+    </group>
+</menu>
