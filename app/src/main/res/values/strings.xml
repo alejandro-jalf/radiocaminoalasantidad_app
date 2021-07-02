@@ -7,6 +7,7 @@
     <string name="example_title">Jesus mi fiel amigo</string>
     <string name="textVolume">Volumen</string>
     <string name="textAcecpt">Aceptar</string>
+    <string name="textCancel">Cancelar</string>
     <string name="textItemContacto">Contactos</string>
     <string name="listeners">0</string>
     <string name="contactRadio">Contactos de la radio</string>
@@ -20,4 +21,8 @@
     <string name="optionCopy">Copiar</string>
     <string name="optionOpen">Abrir</string>
     <string name="optionMessage">Mensaje</string>
+    <string name="textCallRadio">Numero de llamadas</string>
+    <string name="textWhatRadio">Mensajes y Whatsapp</string>
+    <string name="textFaceRadio">Facebook oficial</string>
+    <string name="textCallAdmin">Numero de encargado</string>
 </resources>

@@ -14,4 +14,5 @@
     <color name="backVolume">#E8EAF6</color>
     <color name="whiteAlpha">#B3E8EAF6</color>
     <color name="buttonInfo">#0091EA</color>
+    <color name="textSecondary">#373737</color>
 </resources>
