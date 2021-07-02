@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.radiosantidad1025fm"
+        applicationId "com.radiosantidadapp.radiosantidad1025fm"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1

@@ -1,4 +1,4 @@
-package com.example.radiosantidad1025fm;
+package com.radiosantidadapp.radiosantidad1025fm;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,15 +14,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.radiosantidad1025fm.Configs.Config;
-import com.example.radiosantidad1025fm.services.ServiceAudio;
-import com.example.radiosantidad1025fm.services.ServiceDataRadio;
-import com.example.radiosantidad1025fm.services.ServiceInstanciasComponents;
-import com.example.radiosantidad1025fm.services.ServiceInternet;
-import com.example.radiosantidad1025fm.services.ServiceNotification;
-import com.example.radiosantidad1025fm.services.ServiceTimerAction;
-import com.example.radiosantidad1025fm.utils.VerifyService;
-import com.example.radiosantidad1025fm.views.Contacto;
+import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceAudio;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceDataRadio;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInstanciasComponents;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInternet;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceNotification;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceTimerAction;
+import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
+import com.radiosantidadapp.radiosantidad1025fm.views.Contacto;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class MainActivity extends AppCompatActivity {

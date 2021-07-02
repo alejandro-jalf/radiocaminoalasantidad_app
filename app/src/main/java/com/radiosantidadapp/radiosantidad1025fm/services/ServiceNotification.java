@@ -1,4 +1,4 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -8,12 +8,11 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.service.media.MediaBrowserService;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.radiosantidad1025fm.MainActivity;
-import com.example.radiosantidad1025fm.R;
+import com.radiosantidadapp.radiosantidad1025fm.MainActivity;
+import com.radiosantidadapp.radiosantidad1025fm.R;
 
 public class ServiceNotification {
     private Context context;

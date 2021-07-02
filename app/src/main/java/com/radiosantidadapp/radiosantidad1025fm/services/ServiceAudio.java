@@ -1,32 +1,21 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
-import com.example.radiosantidad1025fm.Configs.Config;
-import com.example.radiosantidad1025fm.MainActivity;
-import com.example.radiosantidad1025fm.R;
-import com.example.radiosantidad1025fm.utils.VerifyService;
+import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
+import com.radiosantidadapp.radiosantidad1025fm.R;
+import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
 
 import java.io.IOException;
 

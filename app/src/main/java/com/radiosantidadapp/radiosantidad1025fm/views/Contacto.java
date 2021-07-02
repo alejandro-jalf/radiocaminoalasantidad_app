@@ -1,4 +1,4 @@
- package com.example.radiosantidad1025fm.views;
+ package com.radiosantidadapp.radiosantidad1025fm.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,8 +18,8 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.example.radiosantidad1025fm.Configs.Config;
-import com.example.radiosantidad1025fm.R;
+import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
+import com.radiosantidadapp.radiosantidad1025fm.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

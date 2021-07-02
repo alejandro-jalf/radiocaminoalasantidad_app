@@ -1,4 +1,4 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
 import android.os.Handler;
 import android.util.Log;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 
-import com.example.radiosantidad1025fm.R;
-import com.example.radiosantidad1025fm.utils.VerifyService;
+import com.radiosantidadapp.radiosantidad1025fm.R;
+import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
 
 import java.util.Timer;
 import java.util.TimerTask;

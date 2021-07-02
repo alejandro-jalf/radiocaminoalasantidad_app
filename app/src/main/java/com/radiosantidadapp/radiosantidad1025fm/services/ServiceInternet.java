@@ -1,11 +1,8 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class ServiceInternet {
     private ConnectivityManager connectivityManager;

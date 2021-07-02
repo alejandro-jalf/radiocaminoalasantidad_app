@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.radiosantidad1025fm">
+    package="com.radiosantidadapp.radiosantidad1025fm">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -14,8 +14,8 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RadioSantidad1025FM">
-        <activity android:name=".views.Contacto"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.radiosantidadapp.radiosantidad1025fm.views.Contacto"></activity>
+        <activity android:name="com.radiosantidadapp.radiosantidad1025fm.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.ServiceAudio" />
+        <service android:name="com.radiosantidadapp.radiosantidad1025fm.services.ServiceAudio" />
     </application>
 
 </manifest>

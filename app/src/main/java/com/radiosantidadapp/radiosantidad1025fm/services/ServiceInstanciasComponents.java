@@ -1,8 +1,6 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 

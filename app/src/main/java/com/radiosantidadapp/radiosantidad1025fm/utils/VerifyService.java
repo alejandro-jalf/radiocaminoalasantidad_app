@@ -1,4 +1,4 @@
-package com.example.radiosantidad1025fm.utils;
+package com.radiosantidadapp.radiosantidad1025fm.utils;
 
 import android.app.ActivityManager;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.example.radiosantidad1025fm;
+package com.radiosantidadapp.radiosantidad1025fm;
 
 import org.junit.Test;
 

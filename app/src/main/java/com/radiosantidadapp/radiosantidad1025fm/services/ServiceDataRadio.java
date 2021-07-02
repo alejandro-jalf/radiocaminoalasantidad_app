@@ -1,12 +1,10 @@
-package com.example.radiosantidad1025fm.services;
+package com.radiosantidadapp.radiosantidad1025fm.services;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,9 +12,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.radiosantidad1025fm.Configs.Config;
-import com.example.radiosantidad1025fm.R;
-import com.example.radiosantidad1025fm.utils.VerifyService;
+import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
+import com.radiosantidadapp.radiosantidad1025fm.R;
+import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONException;
