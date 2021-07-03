@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         if (idItemMenu == R.id.itemContacto) {
             intentContacto = new Intent(this, Contacto.class);
             startActivity(intentContacto);
+            this.finish();
         }
         return super.onOptionsItemSelected(item);
     }
