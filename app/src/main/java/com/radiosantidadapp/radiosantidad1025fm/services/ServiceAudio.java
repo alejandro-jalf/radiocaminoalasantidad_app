@@ -7,6 +7,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -26,8 +28,11 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
     private final int STATUS_STOP = 0;
     private int statusAudio;
     private int statusMediaPlayer;
+    private TelephonyManager telephonyManager;
+    private PhoneStateListener phoneStateListener;
     private ServiceInstanciasComponents serviceInstanciasComponents;
     private ServiceNotification serviceNotification;
+    private ServiceStateCall serviceStateCall;
     private VerifyService verifyService;
     private MediaPlayer mediaPlayer;
     private Context context;
@@ -58,6 +63,9 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         super.onCreate();
         this.config = new Config();
         serviceNotification = new ServiceNotification(getApplicationContext());
+        serviceStateCall = new ServiceStateCall(getApplicationContext());
+        phoneStateListener = serviceStateCall.getPhoneStateListener();
+        telephonyManager = (TelephonyManager) getSystemService(getApplicationContext().TELEPHONY_SERVICE);
     }
 
     private void verifyServiceRunnning() {
@@ -136,6 +144,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
                 serviceNotification.showNotification("Stop");
                 getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
             } else if(statusActual.equals("Stop")) {
+                telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
                 statusAudio = STATUS_STOP;
                 serviceNotification.showNotification("Load");
                 mediaPlayer = new MediaPlayer();
@@ -150,6 +159,7 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
                     mediaPlayer.setVolume(volume, volume);
             }
         } else {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             serviceNotification.showNotification("Load");
             mediaPlayer = new MediaPlayer();
             initMediaPlayer(config);
@@ -164,6 +174,8 @@ public class ServiceAudio extends Service implements MediaPlayer.OnPreparedListe
         if (statusMediaPlayer == STATUS_PLAY) mediaPlayer.stop();
         if (mediaPlayer != null) mediaPlayer.reset();
         mediaPlayer = null;
+
+        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 
         if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR) {
             serviceNotification.hiddeNotification();
