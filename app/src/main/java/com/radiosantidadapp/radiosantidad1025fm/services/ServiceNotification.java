@@ -78,12 +78,12 @@ public class ServiceNotification {
                 .addNextIntent(intent)
                 .getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentToggle = new Intent(context, ServiceAudio.class);
+        Intent intentToggle = new Intent(context, ServiceBackground.class);
         intentToggle.putExtra("event", Status);
         intentToggle.setAction("toggle");
         PendingIntent pendingIntentToggle = PendingIntent.getService(context, 0, intentToggle, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentClose = new Intent(context, ServiceAudio.class);
+        Intent intentClose = new Intent(context, ServiceBackground.class);
         intentClose.putExtra("event", "Close");
         intentClose.setAction("Close");
         PendingIntent pendingIntentClose = PendingIntent.getService(context, 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);

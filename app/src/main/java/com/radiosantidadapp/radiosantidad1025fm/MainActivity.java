@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceAudio;
+import com.radiosantidadapp.radiosantidad1025fm.services.ServiceBackground;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceDataRadio;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInstanciasComponents;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInternet;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ServiceDataRadio serviceDataRadio;
     private ServiceInternet serviceInternet;
     private VerifyService verifyService;
-    private ServiceAudio serviceAudio;
+    // private ServiceAudio serviceAudio;
     private Config config;
     private Button buttonInternet;
     private ImageButton buttonPlayStop;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private int idItemMenu;
     private Intent intentAudio;
     private Intent intentContacto;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         loadInstances();
         serviceTimerAction.initTask();
         verifyConnectionInternet();
+        verifyServiceRunnning();
         setEvents();
     }
 
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
+        intent = new Intent(this, ServiceBackground.class);
         serviceInstanciasComponents = new ServiceInstanciasComponents();
         serviceInstanciasComponents.setBarVolume(barVolume);
         serviceInstanciasComponents.setButtonPlayStop(buttonPlayStop);
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         serviceNotification = new ServiceNotification(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
-        serviceAudio = new ServiceAudio(getBaseContext(), verifyService, serviceNotification, serviceInstanciasComponents);
+        //serviceAudio = new ServiceAudio(getBaseContext(), verifyService, serviceNotification, serviceInstanciasComponents);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 
@@ -136,6 +140,17 @@ public class MainActivity extends AppCompatActivity {
             buttonInternet.setVisibility(View.GONE);
             backgroundInternet.setVisibility(View.GONE);
             imageInternet.setVisibility(View.GONE);
+        }
+    }
+
+    private void verifyServiceRunnning() {
+        if (verifyService.isServiceRunning(ServiceAudio.class)) {
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
+            Toast.makeText(this, "En reproduccion", Toast.LENGTH_SHORT).show();
+            buttonVolume.setVisibility(View.VISIBLE);
+        } else {
+            buttonVolume.setVisibility(View.GONE);
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
         }
     }
 
@@ -156,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
         buttonPlayStop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { serviceAudio.toggleAudio(); }
+            public void onClick(View v) { togglePlayStop(); }
         });
 
         barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -173,6 +188,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {}
         });
+    }
+
+    public void togglePlayStop() {
+        if (verifyService.isServiceRunning(ServiceAudio.class)) {
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
+            stopService(intent);
+            if (barVolume.getVisibility() == View.VISIBLE)
+                buttonVolume.performClick();
+            buttonVolume.setVisibility(View.GONE);
+            Toast.makeText(this, "Deteniendo......", Toast.LENGTH_SHORT).show();
+        } else {
+            startService(intent);
+            buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
+        }
     }
 
     private void toggleBarVolume() {

@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.radiosantidadapp.radiosantidad1025fm.services.ServiceAudio" />
+        <service android:name="com.radiosantidadapp.radiosantidad1025fm.services.ServiceBackground" />
     </application>
 
 </manifest>
