@@ -25,14 +25,15 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
     private MediaPlayer mediaPlayer;
     private float volume;
     private ServiceAudio serviceAudio;
+    private Intent intentBackground;
 
     @Override
     public void onCreate() {
         super.onCreate();
         this.config = new Config();
+        this.intentBackground = new Intent(getApplicationContext(), ServiceBackground.class);
         serviceNotification = new ServiceNotification(getApplicationContext());
         serviceStateCall = new ServiceStateCall(getApplicationContext());
-        serviceAudio = new ServiceAudio(getApplicationContext(), serviceNotification, config);
         phoneStateListener = serviceStateCall.getPhoneStateListener();
         telephonyManager = (TelephonyManager) getSystemService(getApplicationContext().TELEPHONY_SERVICE);
     }
@@ -50,16 +51,17 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
             if (statusActual.equals("Play")) {
                 statusAudio = STATUS_PLAY;
                 serviceNotification.showNotification("Stop");
-                getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceAudio.class));
+                getApplicationContext().stopService(intentBackground);
             } else if(statusActual.equals("Stop")) {
                 telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
                 statusAudio = STATUS_STOP;
                 serviceNotification.showNotification("Load");
+                serviceAudio = new ServiceAudio(getApplicationContext(), serviceNotification, config);
                 serviceAudio.initMediaPlayer();
                 Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
             } else if(statusActual.equals("Close")) {
                 statusAudio = STATUS_INIT;
-                getApplicationContext().stopService(new Intent(getApplicationContext(), ServiceBackground.class));
+                getApplicationContext().stopService(intentBackground);
             } else if (statusActual.equals("Volume")){
                 volume = intent.getExtras().getFloat("volume");
                 serviceAudio.setVolume(volume);
@@ -67,7 +69,7 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
         } else {
             telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
             serviceNotification.showNotification("Load");
-            mediaPlayer = new MediaPlayer();
+            serviceAudio = new ServiceAudio(getApplicationContext(), serviceNotification, config);
             serviceAudio.initMediaPlayer();
             Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
         }
@@ -77,11 +79,8 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) mediaPlayer.reset();
-        mediaPlayer = null;
-
+        if (serviceAudio != null) serviceAudio.stopMediaPlayer();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-
         if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR) {
             serviceNotification.hiddeNotification();
             serviceNotification = null;

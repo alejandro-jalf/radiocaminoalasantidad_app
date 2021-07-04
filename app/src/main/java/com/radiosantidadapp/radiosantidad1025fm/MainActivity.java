@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private ServiceDataRadio serviceDataRadio;
     private ServiceInternet serviceInternet;
     private VerifyService verifyService;
-    // private ServiceAudio serviceAudio;
     private Config config;
     private Button buttonInternet;
     private ImageButton buttonPlayStop;
@@ -144,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void verifyServiceRunnning() {
-        if (verifyService.isServiceRunning(ServiceAudio.class)) {
+        if (verifyService.isServiceRunning(ServiceBackground.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
             Toast.makeText(this, "En reproduccion", Toast.LENGTH_SHORT).show();
             buttonVolume.setVisibility(View.VISIBLE);
@@ -191,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void togglePlayStop() {
-        if (verifyService.isServiceRunning(ServiceAudio.class)) {
+        if (verifyService.isServiceRunning(ServiceBackground.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
             stopService(intent);
             if (barVolume.getVisibility() == View.VISIBLE)

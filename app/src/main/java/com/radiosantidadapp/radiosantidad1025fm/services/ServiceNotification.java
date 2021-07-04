@@ -16,6 +16,7 @@ import com.radiosantidadapp.radiosantidad1025fm.R;
 
 public class ServiceNotification {
     private Context context;
+    private Intent intentBackround;
     private NotificationCompat.Builder nBuilder;
     private final int ID_NOTIFICATION = 1996;
     private final String ID_CHANNEL = "Canal_radio";
@@ -24,6 +25,7 @@ public class ServiceNotification {
     private NotificationChannel channel;
 
    public ServiceNotification(Context context) {
+       this.intentBackround = new Intent(context, ServiceBackground.class);
        this.context = context;
        notificationManager =  (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -78,12 +80,12 @@ public class ServiceNotification {
                 .addNextIntent(intent)
                 .getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentToggle = new Intent(context, ServiceBackground.class);
+        Intent intentToggle = intentBackround;
         intentToggle.putExtra("event", Status);
         intentToggle.setAction("toggle");
         PendingIntent pendingIntentToggle = PendingIntent.getService(context, 0, intentToggle, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intentClose = new Intent(context, ServiceBackground.class);
+        Intent intentClose = intentBackround;
         intentClose.putExtra("event", "Close");
         intentClose.setAction("Close");
         PendingIntent pendingIntentClose = PendingIntent.getService(context, 0, intentClose, PendingIntent.FLAG_UPDATE_CURRENT);

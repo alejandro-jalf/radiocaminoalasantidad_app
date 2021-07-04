@@ -25,6 +25,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     private MediaPlayer mediaPlayer;
     private Context context;
     private Config config;
+    private Intent intentBackround;
 
     public ServiceAudio() { }
 
@@ -32,6 +33,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         this.context = context;
         this.config = config;
         this.serviceNotification = serviceNotification;
+        this.intentBackround = new Intent(context, ServiceBackground.class);
     }
 
     public void initMediaPlayer() {
@@ -49,6 +51,11 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         }
     }
 
+    public void stopMediaPlayer() {
+        if (mediaPlayer != null) mediaPlayer.reset();
+        this.mediaPlayer = null;
+    }
+
     public void setVolume(Float volume) {
         if (mediaPlayer != null)
             mediaPlayer.setVolume(volume, volume);
@@ -58,7 +65,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     public boolean onError(MediaPlayer mp, int what, int extra) {
         Toast.makeText(context, "Sin conexion con el servidor", Toast.LENGTH_SHORT).show();
         statusMediaPlayer = STATUS_ERROR;
-        context.stopService(new Intent(context, ServiceBackground.class));
+        context.stopService(intentBackround);
         return false;
     }
 
@@ -73,6 +80,6 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     @Override
     public void onCompletion(MediaPlayer mp) {
         Toast.makeText(context, "Transmicion terminada", Toast.LENGTH_SHORT).show();
-        context.stopService(new Intent(context, ServiceBackground.class));
+        context.stopService(intentBackround);
     }
 }

@@ -46,7 +46,7 @@ public class ServiceTimerAction {
                     public void run() {
                         try {
                             serviceDataRadio.getDataRadio();
-                            if (verifyService.isServiceRunning(ServiceAudio.class)) {
+                            if (verifyService.isServiceRunning(ServiceBackground.class)) {
                                 buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
                                 buttonVolume.setVisibility(View.VISIBLE);
                             } else {

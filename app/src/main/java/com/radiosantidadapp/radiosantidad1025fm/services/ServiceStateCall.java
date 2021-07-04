@@ -9,11 +9,11 @@ import android.widget.Toast;
 public class ServiceStateCall {
     private PhoneStateListener phoneStateListener;
     private Context context;
-    private Intent intentAudio;
+    private Intent intentBackround;
 
     public ServiceStateCall(Context context) {
         this.context = context;
-        this. intentAudio = new Intent(context, ServiceAudio.class);
+        this. intentBackround = new Intent(context, ServiceBackground.class);
         initStateListener();
     }
 
@@ -28,11 +28,11 @@ public class ServiceStateCall {
                         // context.startService(intentAudio);
                         break;
                     case TelephonyManager.CALL_STATE_RINGING:
-                        context.stopService(intentAudio);
+                        context.stopService(intentBackround);
                         Toast.makeText(context, "Llamada entrante", Toast.LENGTH_SHORT).show();
                         break;
                     case TelephonyManager.CALL_STATE_OFFHOOK: // Se incia la llamada
-                        context.stopService(intentAudio);
+                        context.stopService(intentBackround);
                         break;
                 }
             }
