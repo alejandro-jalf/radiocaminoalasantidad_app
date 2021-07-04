@@ -3,25 +3,23 @@
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,36 +27,35 @@ import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
 import com.radiosantidadapp.radiosantidad1025fm.MainActivity;
 import com.radiosantidadapp.radiosantidad1025fm.R;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 public class Contacto extends AppCompatActivity {
     private ImageButton btnPopupMenuWhatR;
     private ImageButton btnPopupMenuCallR;
     private ImageButton btnPopupMenuFaceR;
     private ImageButton btnPopupMenuWhatE;
     private ImageButton btnPopupMenuCallE;
-    private String sourceActual;
-    private String numPhone;
+    private ActionBar actionBar;
+    //private Context context;
     private Config config;
-    private ClipboardManager clipboardManager;
-    private ClipData clip;
+
     private AlertDialog alertDialog;
     private AlertDialog.Builder alertBuilder;
     private LayoutInflater layoutInflater;
-    private View viewAlert;
-    private ActionBar actionBar;
-
-    private TextView btnCalcelAlert;
     private ImageView imageViewCopy;
-    private TextView textViewCopy;
     private ImageView imageViewOpen;
-    private TextView textViewOpen;
     private ImageView imageViewCall;
-    private TextView textViewCall;
     private ImageView imageViewMessage;
+    private TextView textViewCopy;
+    private TextView textViewOpen;
+    private TextView textViewCall;
     private TextView textViewMessage;
+    private TextView btnCalcelAlert;
     private TextView titleCard;
+    private View viewAlert;
+    private String numPhone;
+    private String sourceActual;
+
+    private ClipData clip;
+    private ClipboardManager clipboardManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,30 +64,13 @@ public class Contacto extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        this.config = new Config();
 
         initComponents();
         initAlertDialog();
-        this.config = new Config();
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-        return false;
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == event.KEYCODE_BACK) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     private void initComponents() {
-        alertBuilder = new AlertDialog.Builder(this);
         btnPopupMenuWhatR = findViewById(R.id.btnPopupWhatR);
         btnPopupMenuCallR = findViewById(R.id.btnPopupCallR);
         btnPopupMenuFaceR = findViewById(R.id.btnPopupFaceR);
@@ -119,18 +99,36 @@ public class Contacto extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+        return false;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == event.KEYCODE_BACK) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
     private void initAlertDialog() {
+        alertBuilder = new AlertDialog.Builder(this);
         layoutInflater = getLayoutInflater();
         viewAlert = layoutInflater.inflate(R.layout.alert_options, null);
         alertBuilder.setView(viewAlert);
         alertDialog = alertBuilder.create();
 
-        btnCalcelAlert = viewAlert.findViewById(R.id.btnCancelOption);
         titleCard = viewAlert.findViewById(R.id.titleCard);
+        btnCalcelAlert = viewAlert.findViewById(R.id.btnCancelOption);
+        imageViewMessage = viewAlert.findViewById(R.id.imageViewMessage);
         imageViewCopy = viewAlert.findViewById(R.id.imageViewCopy);
         imageViewCall = viewAlert.findViewById(R.id.imageViewCall);
         imageViewOpen = viewAlert.findViewById(R.id.imageViewOpen);
-        imageViewMessage = viewAlert.findViewById(R.id.imageViewMessage);
         textViewCopy = viewAlert.findViewById(R.id.optionTextCopy);
         textViewCall = viewAlert.findViewById(R.id.optionTextCall);
         textViewOpen = viewAlert.findViewById(R.id.optionTextOpen);
@@ -194,7 +192,6 @@ public class Contacto extends AppCompatActivity {
         setTitleCard(source);
         alertDialog.show();
     }
-
     private void setTitleCard(String source) {
         if (source.equals("WhatRadio") || source.equals("WhatAdmin")) titleCard.setText(R.string.textWhatRadio);
         if (source.equals("CallRadio")) titleCard.setText(R.string.textCallRadio);
@@ -251,8 +248,6 @@ public class Contacto extends AppCompatActivity {
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.setComponent(new ComponentName("com.whatsapp","com.whatsapp.Conversation"));
         intent.putExtra("jid", PhoneNumberUtils.stripSeparators("52" + number)+"@s.whatsapp.net");
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Bendiciones");
         try {
             startActivity(intent);
         } catch (android.content.ActivityNotFoundException ex) {
@@ -263,24 +258,29 @@ public class Contacto extends AppCompatActivity {
 
     private void openFacebook() {
         try {
-            Intent intentFacebook = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getFacebookId()));
-            intentFacebook.setPackage("com.facebook.katana");
-            startActivity(intentFacebook);
+            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.katana", 0);
+            if (applicationInfo.enabled) {
+                Intent intentFacebook = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getFacebookId()));
+                intentFacebook.setPackage("com.facebook.katana");
+                startActivity(intentFacebook);
+            }
         } catch (Exception e) {
-            Log.d("Facebook", "Aplicación no instalada.");
             try {
-                Intent intentFacebookLite = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getFacebookId()));
-                intentFacebookLite.setPackage("com.facebook.lite");
-                startActivity(intentFacebookLite);
-            } catch (Exception el) {
-                Log.d("Facebook Lite", "Aplicación no instalada.");
+                ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.lite", 0);
+                if (applicationInfo.enabled) {
+                    Intent intentFbLite = getPackageManager().getLaunchIntentForPackage("com.facebook.lite");
+                    intentFbLite.setAction(Intent.ACTION_VIEW);
+                    intentFbLite.setData(Uri.parse(config.getFacebookId()));
+                    startActivity(intentFbLite);
+                }
+            } catch (Exception eFbLite) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(config.getUrlPageFacebook())));
             }
         }
     }
 
     private void copyClipBoard(String data) {
-        clipboardManager = (ClipboardManager) this.getSystemService(this.CLIPBOARD_SERVICE);
+        clipboardManager = (ClipboardManager) getSystemService(this.CLIPBOARD_SERVICE);
         clip = ClipData.newPlainText("Dato", data);
         clipboardManager.setPrimaryClip(clip);
         Toast.makeText(this,"Copiado al portapapeles", Toast.LENGTH_SHORT).show();
