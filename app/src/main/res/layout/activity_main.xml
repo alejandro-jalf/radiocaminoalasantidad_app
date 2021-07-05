@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="5dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="23sp"
+        android:textColor="@color/online"
+        android:text="@string/status_online"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -15,19 +30,6 @@
         app:layout_constraintBottom_toTopOf="@+id/titleSound"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/radio_logo" />
-
-    <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switchStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:textSize="23sp"
-        android:textColor="@color/online"
-        android:text="@string/status_online"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/titleSound"
@@ -42,7 +44,7 @@
         android:gravity="center"
         android:text="@string/example_title"
         android:textColor="#000000"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@id/textView3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -144,7 +146,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_baseline_fiber_manual_record_40"
         tools:ignore="VectorDrawableCompat"
-        android:contentDescription="TODO" />
+        android:contentDescription="@string/description_image"
+        android:layout_marginStart="28dp" />
 
     <TextView
         android:id="@+id/textListeners"
@@ -172,21 +175,22 @@
         android:id="@+id/imageInternet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_wifi_off_130"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        android:contentDescription="@string/description_image" />
 
     <Button
         android:id="@+id/buttonInternet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="@string/textAcecpt"
         android:background="@color/buttonInfo"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageInternet" />

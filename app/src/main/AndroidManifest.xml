@@ -16,8 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RadioSantidad1025FM">
         <activity android:name="com.radiosantidadapp.radiosantidad1025fm.views.Contacto"></activity>
-        <activity android:name="com.radiosantidadapp.radiosantidad1025fm.MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name="com.radiosantidadapp.radiosantidad1025fm.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
