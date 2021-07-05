@@ -7,14 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,8 +30,8 @@ public class Contacto extends AppCompatActivity {
     private ImageButton btnPopupMenuFaceR;
     private ImageButton btnPopupMenuWhatE;
     private ImageButton btnPopupMenuCallE;
+    private ImageButton btnPopupMenuRaWeb;
     private ActionBar actionBar;
-    //private Context context;
     private Config config;
 
     private AlertDialog alertDialog;
@@ -76,6 +73,7 @@ public class Contacto extends AppCompatActivity {
         btnPopupMenuFaceR = findViewById(R.id.btnPopupFaceR);
         btnPopupMenuWhatE = findViewById(R.id.btnPopupWhatE);
         btnPopupMenuCallE = findViewById(R.id.btnPopupCallE);
+        btnPopupMenuRaWeb = findViewById(R.id.btnPopupRadioWeb);
 
         btnPopupMenuWhatR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +94,10 @@ public class Contacto extends AppCompatActivity {
         btnPopupMenuCallE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { showAlertDialogFor("CallAdmin"); }
+        });
+        btnPopupMenuRaWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showAlertDialogFor("RadioWeb"); }
         });
     }
 
@@ -155,6 +157,7 @@ public class Contacto extends AppCompatActivity {
                 else if (sourceActual.equals("WhatRadio")) sendWhatsappTo(config.getNumberRadio());
                 else if (sourceActual.equals("WhatAdmin")) sendWhatsappTo(config.getNumberAdmin());
                 else if (sourceActual.equals("FaceRadio")) openFacebook();
+                else if (sourceActual.equals("RadioWeb")) openRadioWeb();
             }
         });
 
@@ -197,14 +200,15 @@ public class Contacto extends AppCompatActivity {
         if (source.equals("CallRadio")) titleCard.setText(R.string.textCallRadio);
         if (source.equals("CallAdmin")) titleCard.setText(R.string.textCallAdmin);
         if (source.equals("FaceRadio")) titleCard.setText(R.string.textFaceRadio);
+        if (source.equals("RadioWeb")) titleCard.setText(R.string.textRadioWeb);
     }
 
     private void optionsVisible(String source) {
         showAllOptions();
-        if (source.equals("WhatRadio") || source.equals("WhatAdmin") || source.equals("FaceRadio")) {
+        if (source.equals("WhatRadio") || source.equals("WhatAdmin") || source.equals("FaceRadio") || source.equals("RadioWeb")) {
             imageViewCall.setVisibility(View.GONE);
             textViewCall.setVisibility(View.GONE);
-            if (source.equals("FaceRadio")) {
+            if (source.equals("FaceRadio") || source.equals("RadioWeb")) {
                 imageViewMessage.setVisibility(View.GONE);
                 textViewMessage.setVisibility(View.GONE);
                 imageViewCopy.setVisibility(View.GONE);
@@ -276,6 +280,14 @@ public class Contacto extends AppCompatActivity {
             } catch (Exception eFbLite) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(config.getUrlPageFacebook())));
             }
+        }
+    }
+
+    private void openRadioWeb() {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(config.getUrlRadioSantidadWeb())));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

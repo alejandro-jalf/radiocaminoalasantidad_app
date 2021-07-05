@@ -25,4 +25,5 @@
     <string name="textWhatRadio">Mensajes y Whatsapp</string>
     <string name="textFaceRadio">Facebook oficial</string>
     <string name="textCallAdmin">Numero de encargado</string>
+    <string name="textRadioWeb">Pagina Web</string>
 </resources>
