@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
-import com.radiosantidadapp.radiosantidad1025fm.services.ServiceAudio;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceBackground;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceDataRadio;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInstanciasComponents;
@@ -48,15 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private SwitchMaterial switchMaterial;
     private int visibleBarVolume;
     private int idItemMenu;
-    private Intent intentAudio;
     private Intent intentContacto;
-    private Intent intent;
+    private Intent intentBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.intentAudio = new Intent(getApplicationContext(), ServiceAudio.class);
         initComponents();
         loadInstances();
         serviceTimerAction.initTask();
@@ -112,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
-        intent = new Intent(this, ServiceBackground.class);
+        intentBackground = new Intent(this, ServiceBackground.class);
         serviceInstanciasComponents = new ServiceInstanciasComponents();
         serviceInstanciasComponents.setBarVolume(barVolume);
         serviceInstanciasComponents.setButtonPlayStop(buttonPlayStop);
@@ -125,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         serviceNotification = new ServiceNotification(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
-        //serviceAudio = new ServiceAudio(getBaseContext(), verifyService, serviceNotification, serviceInstanciasComponents);
         serviceInternet = new ServiceInternet(getApplicationContext());
     }
 
@@ -176,9 +172,9 @@ public class MainActivity extends AppCompatActivity {
         barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                intentAudio.putExtra("event", "Volume");
-                intentAudio.putExtra("volume", (float) progress/100);
-                startService(intentAudio);
+                intentBackground.putExtra("event", "Volume");
+                intentBackground.putExtra("volume", (float) progress/100);
+                startService(intentBackground);
             }
 
             @Override
@@ -192,13 +188,13 @@ public class MainActivity extends AppCompatActivity {
     public void togglePlayStop() {
         if (verifyService.isServiceRunning(ServiceBackground.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-            stopService(intent);
+            stopService(intentBackground);
             if (barVolume.getVisibility() == View.VISIBLE)
                 buttonVolume.performClick();
             buttonVolume.setVisibility(View.GONE);
             Toast.makeText(this, "Deteniendo......", Toast.LENGTH_SHORT).show();
         } else {
-            startService(intent);
+            startService(intentBackground);
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         }
     }
