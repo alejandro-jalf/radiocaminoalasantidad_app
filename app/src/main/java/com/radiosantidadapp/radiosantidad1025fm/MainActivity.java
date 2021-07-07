@@ -19,7 +19,6 @@ import com.radiosantidadapp.radiosantidad1025fm.services.ServiceBackground;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceDataRadio;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInstanciasComponents;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInternet;
-import com.radiosantidadapp.radiosantidad1025fm.services.ServiceNotification;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceTimerAction;
 import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
 import com.radiosantidadapp.radiosantidad1025fm.views.Contacto;
@@ -28,7 +27,6 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 public class MainActivity extends AppCompatActivity {
 
     private ServiceInstanciasComponents serviceInstanciasComponents;
-    private ServiceNotification serviceNotification;
     private ServiceTimerAction serviceTimerAction;
     private ServiceDataRadio serviceDataRadio;
     private ServiceInternet serviceInternet;
@@ -49,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private int idItemMenu;
     private Intent intentContacto;
     private Intent intentBackground;
+    private Intent intentBackgroundVolume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
     private void loadInstances() {
         config = new Config();
         intentBackground = new Intent(this, ServiceBackground.class);
+        intentBackgroundVolume = new Intent(this, ServiceBackground.class);
         serviceInstanciasComponents = new ServiceInstanciasComponents();
         serviceInstanciasComponents.setBarVolume(barVolume);
         serviceInstanciasComponents.setButtonPlayStop(buttonPlayStop);
@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
         serviceInstanciasComponents.setTitleSound(titleSound);
 
         verifyService = new VerifyService(getApplicationContext());
-        serviceNotification = new ServiceNotification(getApplicationContext());
         serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
         serviceInternet = new ServiceInternet(getApplicationContext());
@@ -172,9 +171,9 @@ public class MainActivity extends AppCompatActivity {
         barVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                intentBackground.putExtra("event", "Volume");
-                intentBackground.putExtra("volume", (float) progress/100);
-                startService(intentBackground);
+                intentBackgroundVolume.putExtra("event", "Volume");
+                intentBackgroundVolume.putExtra("volume", (float) progress/100);
+                startService(intentBackgroundVolume);
             }
 
             @Override
