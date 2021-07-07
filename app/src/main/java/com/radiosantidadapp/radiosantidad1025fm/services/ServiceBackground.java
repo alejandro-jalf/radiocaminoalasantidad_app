@@ -2,7 +2,6 @@ package com.radiosantidadapp.radiosantidad1025fm.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -22,7 +21,6 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
     private TelephonyManager telephonyManager;
     private PhoneStateListener phoneStateListener;
     private Config config;
-    private MediaPlayer mediaPlayer;
     private float volume;
     private ServiceAudio serviceAudio;
     private Intent intentBackground;
@@ -73,7 +71,7 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
             serviceAudio.initMediaPlayer();
             Toast.makeText(getApplicationContext(), "Estableciendo conexion", Toast.LENGTH_SHORT).show();
         }
-        return START_STICKY;
+        return Service.START_STICKY;
     }
 
     @Override

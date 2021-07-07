@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.wifi.WifiManager;
 import android.os.PowerManager;
 
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     private Context context;
     private Config config;
     private Intent intentBackround;
+    private WifiManager.WifiLock wifiLock;
 
     public ServiceAudio() { }
 
@@ -34,6 +36,8 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
         this.config = config;
         this.serviceNotification = serviceNotification;
         this.intentBackround = new Intent(context, ServiceBackground.class);
+        this.wifiLock = ((WifiManager) context.getSystemService(Context.WIFI_SERVICE))
+                .createWifiLock(WifiManager.WIFI_MODE_FULL, "mylock");
     }
 
     public void initMediaPlayer() {
@@ -45,6 +49,7 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.prepareAsync();
             mediaPlayer.setWakeMode(context, PowerManager.PARTIAL_WAKE_LOCK);
+            wifiLock.acquire();
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(context, "Fallo al con el servidor de radio init", Toast.LENGTH_SHORT).show();
@@ -54,6 +59,8 @@ public class ServiceAudio implements MediaPlayer.OnPreparedListener, MediaPlayer
     public void stopMediaPlayer() {
         if (mediaPlayer != null) mediaPlayer.reset();
         this.mediaPlayer = null;
+        if (wifiLock != null) wifiLock.release();
+        wifiLock = null;
     }
 
     public void setVolume(Float volume) {
