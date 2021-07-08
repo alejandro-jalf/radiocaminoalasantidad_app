@@ -11,7 +11,8 @@ import androidx.annotation.Nullable;
 
 import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
 
-public class ServiceBackground extends Service {private final int STATUS_INIT = 3;
+public class ServiceBackground extends Service {
+    private final int STATUS_INIT = 3;
     private final int STATUS_ERROR = 2;
     private final int STATUS_PLAY = 1;
     private final int STATUS_STOP = 0;
@@ -24,6 +25,8 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
     private float volume;
     private ServiceAudio serviceAudio;
     private Intent intentBackground;
+
+    public ServiceBackground() {}
 
     @Override
     public void onCreate() {
@@ -44,7 +47,7 @@ public class ServiceBackground extends Service {private final int STATUS_INIT = 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getExtras() != null) {
+        if (intent != null && intent.getExtras() != null) {
             String statusActual = intent.getExtras().getString("event");
             if (statusActual.equals("Play")) {
                 statusAudio = STATUS_PLAY;
