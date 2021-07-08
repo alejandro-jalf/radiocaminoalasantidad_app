@@ -13,7 +13,6 @@ import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
 
 public class ServiceBackground extends Service {
     private final int STATUS_INIT = 3;
-    private final int STATUS_ERROR = 2;
     private final int STATUS_PLAY = 1;
     private final int STATUS_STOP = 0;
     private int statusAudio;
@@ -82,11 +81,10 @@ public class ServiceBackground extends Service {
         super.onDestroy();
         if (serviceAudio != null) serviceAudio.stopMediaPlayer();
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
-        if(statusAudio == STATUS_INIT || statusAudio == STATUS_ERROR) {
+        if(statusAudio == STATUS_INIT) {
             serviceNotification.hiddeNotification();
             serviceNotification = null;
-        }
-        else
+        } else
             serviceNotification.showNotification("Stop");
     }
 }
