@@ -56,7 +56,10 @@ public class ServiceDataRadio {
                             switchMaterial.setChecked(true);
                             switchMaterial.setText("Al aire");
                             switchMaterial.setTextColor(Color.rgb(0, 200, 83));
-                            titleSong.setText(dataResponse.getString("title"));
+                            if (dataResponse.getString("title").trim().equals("The current song is not available"))
+                                titleSong.setText("La expresion de la verdad");
+                            else
+                                titleSong.setText(dataResponse.getString("title"));
                             textListeners.setText(dataResponse.getString("listeners").substring(12));
                         }
                         else {
