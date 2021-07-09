@@ -1,12 +1,11 @@
-package com.radiosantidadapp.radiosantidad1025fm;
+package com.radiosantidadapp.radiosantidad1025fm.fragments.home;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -14,18 +13,20 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
+import com.radiosantidadapp.radiosantidad1025fm.R;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceBackground;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceDataRadio;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInstanciasComponents;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceInternet;
 import com.radiosantidadapp.radiosantidad1025fm.services.ServiceTimerAction;
 import com.radiosantidadapp.radiosantidad1025fm.utils.VerifyService;
-import com.radiosantidadapp.radiosantidad1025fm.views.Contacto;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
-public class MainActivity extends AppCompatActivity {
-
+public class HomeFragment extends Fragment {
     private ServiceInstanciasComponents serviceInstanciasComponents;
     private ServiceTimerAction serviceTimerAction;
     private ServiceDataRadio serviceDataRadio;
@@ -44,67 +45,47 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar barVolume;
     private SwitchMaterial switchMaterial;
     private int visibleBarVolume;
-    private int idItemMenu;
-    private Intent intentContacto;
     private Intent intentBackground;
     private Intent intentBackgroundVolume;
+    private Context context;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initComponents();
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        this.context = getContext();
+        initComponents(root);
         loadInstances();
         serviceTimerAction.initTask();
         verifyConnectionInternet();
         verifyServiceRunnning();
         setEvents();
+        return root;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.opciones, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        idItemMenu = item.getItemId();
-        if (idItemMenu == R.id.itemContacto) {
-            intentContacto = new Intent(this, Contacto.class);
-            startActivity(intentContacto);
-            this.finish();
-        }
-        if (idItemMenu == R.id.itemHorarios) {
-            intentContacto = new Intent(this, MainActivityActual.class);
-            startActivity(intentContacto);
-            this.finish();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void initComponents() {
-        switchMaterial = findViewById(R.id.switchStatus);
+    private void initComponents(View view) {
+        switchMaterial = view.findViewById(R.id.switchStatus);
         switchMaterial.setChecked(false);
         switchMaterial.setText("Cargando....");
         switchMaterial.setEnabled(false);
-        buttonPlayStop = findViewById(R.id.buttinPlayStop);
-        buttonVolume = findViewById(R.id.buttonVolume);
+        buttonPlayStop = view.findViewById(R.id.buttinPlayStop);
+        buttonVolume = view.findViewById(R.id.buttonVolume);
         buttonVolume.setVisibility(View.GONE);
-        buttonInternet = findViewById(R.id.buttonInternet);
+        buttonInternet = view.findViewById(R.id.buttonInternet);
         buttonInternet.setVisibility(View.GONE);
-        titleSound = findViewById(R.id.titleSound);
+        titleSound = view.findViewById(R.id.titleSound);
         titleSound.setText("Cargando....");
-        backgroundInternet = findViewById(R.id.backgroundInternet);
+        backgroundInternet = view.findViewById(R.id.backgroundInternet);
         backgroundInternet.setVisibility(View.GONE);
-        imageInternet = findViewById(R.id.imageInternet);
+        imageInternet = view.findViewById(R.id.imageInternet);
         imageInternet.setVisibility(View.GONE);
-        textListeners = findViewById(R.id.textListeners);
-        backVolume = findViewById(R.id.backgroundVolume);
+        textListeners = view.findViewById(R.id.textListeners);
+        backVolume = view.findViewById(R.id.backgroundVolume);
         backVolume.setVisibility(View.GONE);
-        textVolume = findViewById(R.id.textVolumen);
+        textVolume = view.findViewById(R.id.textVolumen);
         textVolume.setVisibility(View.GONE);
-        barVolume = findViewById(R.id.barVolume);
+        barVolume = view.findViewById(R.id.barVolume);
         barVolume.setVisibility(View.GONE);
         barVolume.setMax(100);
         barVolume.setProgress(100);
@@ -113,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadInstances() {
         config = new Config();
-        intentBackground = new Intent(this, ServiceBackground.class);
-        intentBackgroundVolume = new Intent(this, ServiceBackground.class);
+        intentBackground = new Intent(context, ServiceBackground.class);
+        intentBackgroundVolume = new Intent(context, ServiceBackground.class);
         serviceInstanciasComponents = new ServiceInstanciasComponents();
         serviceInstanciasComponents.setBarVolume(barVolume);
         serviceInstanciasComponents.setButtonPlayStop(buttonPlayStop);
@@ -123,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         serviceInstanciasComponents.setTextListeners(textListeners);
         serviceInstanciasComponents.setTitleSound(titleSound);
 
-        verifyService = new VerifyService(getApplicationContext());
-        serviceDataRadio = new ServiceDataRadio(getApplicationContext(), config, verifyService, serviceInstanciasComponents);
+        verifyService = new VerifyService(context);
+        serviceDataRadio = new ServiceDataRadio(context, config, verifyService, serviceInstanciasComponents);
         serviceTimerAction = new ServiceTimerAction(serviceDataRadio, verifyService, serviceInstanciasComponents, 5000);
-        serviceInternet = new ServiceInternet(getApplicationContext());
+        serviceInternet = new ServiceInternet(context);
     }
 
     private void verifyConnectionInternet() {
@@ -134,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             buttonInternet.setVisibility(View.VISIBLE);
             backgroundInternet.setVisibility(View.VISIBLE);
             imageInternet.setVisibility(View.VISIBLE);
-            Toast.makeText(this, "Sin conexion a internet", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Sin conexion a internet", Toast.LENGTH_LONG).show();
         } else {
             buttonInternet.setVisibility(View.GONE);
             backgroundInternet.setVisibility(View.GONE);
@@ -145,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     private void verifyServiceRunnning() {
         if (verifyService.isServiceRunning(ServiceBackground.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
-            Toast.makeText(this, "En reproduccion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "En reproduccion", Toast.LENGTH_SHORT).show();
             buttonVolume.setVisibility(View.VISIBLE);
         } else {
             buttonVolume.setVisibility(View.GONE);
@@ -178,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 intentBackgroundVolume.putExtra("event", "Volume");
                 intentBackgroundVolume.putExtra("volume", (float) progress/100);
-                startService(intentBackgroundVolume);
+                context.startService(intentBackgroundVolume);
             }
 
             @Override
@@ -192,13 +173,13 @@ public class MainActivity extends AppCompatActivity {
     public void togglePlayStop() {
         if (verifyService.isServiceRunning(ServiceBackground.class)) {
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_play_circle_filled_55);
-            stopService(intentBackground);
+            context.stopService(intentBackground);
             if (barVolume.getVisibility() == View.VISIBLE)
                 buttonVolume.performClick();
             buttonVolume.setVisibility(View.GONE);
-            Toast.makeText(this, "Deteniendo......", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Deteniendo......", Toast.LENGTH_SHORT).show();
         } else {
-            startService(intentBackground);
+            context.startService(intentBackground);
             buttonPlayStop.setImageResource(R.drawable.ic_baseline_stop_circle_55);
         }
     }

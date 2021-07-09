@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/itemContacto"
-        android:title="@string/textItemContacto" />
+    <group>
+        <item
+            android:id="@+id/itemContacto"
+            android:icon="@drawable/ic_baseline_message_30"
+            android:title="@string/textItemContacto" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/itemHorarios"
+            android:title="@string/textItemHorarios" />
+    </group>
+    <group>
+        <item
+            android:id="@+id/itemAbout"
+            android:title="@string/textItemAbout" />
+    </group>
 </menu>
