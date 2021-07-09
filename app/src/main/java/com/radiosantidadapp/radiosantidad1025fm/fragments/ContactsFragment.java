@@ -1,37 +1,36 @@
- package com.radiosantidadapp.radiosantidad1025fm.views;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+package com.radiosantidadapp.radiosantidad1025fm.fragments;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+
 import com.radiosantidadapp.radiosantidad1025fm.Configs.Config;
-import com.radiosantidadapp.radiosantidad1025fm.MainActivity;
 import com.radiosantidadapp.radiosantidad1025fm.R;
 
-public class Contacto extends AppCompatActivity {
+public class ContactsFragment extends Fragment {
     private ImageButton btnPopupMenuWhatR;
     private ImageButton btnPopupMenuCallR;
     private ImageButton btnPopupMenuFaceR;
     private ImageButton btnPopupMenuWhatE;
     private ImageButton btnPopupMenuCallE;
     private ImageButton btnPopupMenuRaWeb;
-    private ActionBar actionBar;
     private Config config;
 
     private AlertDialog alertDialog;
@@ -50,30 +49,30 @@ public class Contacto extends AppCompatActivity {
     private View viewAlert;
     private String numPhone;
     private String sourceActual;
+    private Context context;
 
     private ClipData clip;
     private ClipboardManager clipboardManager;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contacto);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        View root = inflater.inflate(R.layout.fragment_contacts, container, false);
 
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        this.context = getContext();
         this.config = new Config();
 
-        initComponents();
+        initComponents(root);
         initAlertDialog();
+        return root;
     }
 
-    private void initComponents() {
-        btnPopupMenuWhatR = findViewById(R.id.btnPopupWhatR);
-        btnPopupMenuCallR = findViewById(R.id.btnPopupCallR);
-        btnPopupMenuFaceR = findViewById(R.id.btnPopupFaceR);
-        btnPopupMenuWhatE = findViewById(R.id.btnPopupWhatE);
-        btnPopupMenuCallE = findViewById(R.id.btnPopupCallE);
-        btnPopupMenuRaWeb = findViewById(R.id.btnPopupRadioWeb);
+    private void initComponents(View view) {
+        btnPopupMenuWhatR = view.findViewById(R.id.btnPopupWhatR);
+        btnPopupMenuCallR = view.findViewById(R.id.btnPopupCallR);
+        btnPopupMenuFaceR = view.findViewById(R.id.btnPopupFaceR);
+        btnPopupMenuWhatE = view.findViewById(R.id.btnPopupWhatE);
+        btnPopupMenuCallE = view.findViewById(R.id.btnPopupCallE);
+        btnPopupMenuRaWeb = view.findViewById(R.id.btnPopupRadioWeb);
 
         btnPopupMenuWhatR.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,25 +100,8 @@ public class Contacto extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        startActivity(new Intent(this, MainActivity.class));
-        finish();
-        return false;
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == event.KEYCODE_BACK) {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-
     private void initAlertDialog() {
-        alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder = new AlertDialog.Builder(context);
         layoutInflater = getLayoutInflater();
         viewAlert = layoutInflater.inflate(R.layout.alert_options, null);
         alertBuilder.setView(viewAlert);
@@ -143,7 +125,7 @@ public class Contacto extends AppCompatActivity {
                 numPhone = sourceActual.equals("CallRadio")
                         ? config.getNumberRadio()
                         : config.getNumberAdmin();
-                Toast.makeText(getApplicationContext(), "Estableciendo llamada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Estableciendo llamada", Toast.LENGTH_SHORT).show();
                 callTo(numPhone);
             }
         });
@@ -236,13 +218,13 @@ public class Contacto extends AppCompatActivity {
     }
 
     private void openCall(String number) {
-        Toast.makeText(this, "Abriendo aplicacion de llamadas", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Abriendo aplicacion de llamadas", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number)));
     }
 
     private void senMessageTo(String number) {
         String message = "Bendiciones";
-        Toast.makeText(this, "Abriendo aplicacion de mensajes: ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "Abriendo aplicacion de mensajes: ", Toast.LENGTH_SHORT).show();
         Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
         smsIntent.putExtra("sms_body", message);
         startActivity(smsIntent);
@@ -256,13 +238,13 @@ public class Contacto extends AppCompatActivity {
             startActivity(intent);
         } catch (android.content.ActivityNotFoundException ex) {
             ex.printStackTrace();
-            Toast.makeText(this, "El dispositivo no tiene instalado WhatsApp", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "El dispositivo no tiene instalado WhatsApp", Toast.LENGTH_LONG).show();
         }
     }
 
     private void openFacebook() {
         try {
-            ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.katana", 0);
+            ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo("com.facebook.katana", 0);
             if (applicationInfo.enabled) {
                 Intent intentFacebook = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getFacebookId()));
                 intentFacebook.setPackage("com.facebook.katana");
@@ -270,9 +252,9 @@ public class Contacto extends AppCompatActivity {
             }
         } catch (Exception e) {
             try {
-                ApplicationInfo applicationInfo = getPackageManager().getApplicationInfo("com.facebook.lite", 0);
+                ApplicationInfo applicationInfo = context.getPackageManager().getApplicationInfo("com.facebook.lite", 0);
                 if (applicationInfo.enabled) {
-                    Intent intentFbLite = getPackageManager().getLaunchIntentForPackage("com.facebook.lite");
+                    Intent intentFbLite = context.getPackageManager().getLaunchIntentForPackage("com.facebook.lite");
                     intentFbLite.setAction(Intent.ACTION_VIEW);
                     intentFbLite.setData(Uri.parse(config.getFacebookId()));
                     startActivity(intentFbLite);
@@ -292,9 +274,9 @@ public class Contacto extends AppCompatActivity {
     }
 
     private void copyClipBoard(String data) {
-        clipboardManager = (ClipboardManager) getSystemService(this.CLIPBOARD_SERVICE);
+        clipboardManager = (ClipboardManager) context.getSystemService(context.CLIPBOARD_SERVICE);
         clip = ClipData.newPlainText("Dato", data);
         clipboardManager.setPrimaryClip(clip);
-        Toast.makeText(this,"Copiado al portapapeles", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context,"Copiado al portapapeles", Toast.LENGTH_SHORT).show();
     }
 }

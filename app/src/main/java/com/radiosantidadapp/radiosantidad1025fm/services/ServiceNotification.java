@@ -11,7 +11,7 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 
-import com.radiosantidadapp.radiosantidad1025fm.MainActivity;
+import com.radiosantidadapp.radiosantidad1025fm.MainActivityActual;
 import com.radiosantidadapp.radiosantidad1025fm.R;
 
 public class ServiceNotification {
@@ -75,7 +75,7 @@ public class ServiceNotification {
         notificationBuilder.setOnlyAlertOnce(true);
         notificationBuilder.setOngoing(true);
 
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainActivityActual.class);
         PendingIntent pendingIntent = TaskStackBuilder.create(context)
                 .addNextIntent(intent)
                 .getPendingIntent(10, PendingIntent.FLAG_UPDATE_CURRENT);
