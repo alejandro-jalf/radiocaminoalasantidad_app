@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.HelpFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="20dp" >
+
+            <TextView
+                android:id="@+id/textViewListenerTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_ic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageViewListeners"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/description_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewListenerTitle"
+                app:srcCompat="@drawable/ic_baseline_hearing_45"
+                tools:ignore="VectorDrawableCompat" />
+
+            <ImageView
+                android:id="@+id/circleListeners"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="27dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginBottom="5dp"
+                android:contentDescription="@string/description_image"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewListeners"
+                app:layout_constraintStart_toStartOf="@id/imageViewListeners"
+                app:srcCompat="@drawable/ic_baseline_fiber_manual_record_40"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textListeners"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/listeners"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/circleListeners"
+                app:layout_constraintEnd_toEndOf="@id/circleListeners"
+                app:layout_constraintStart_toStartOf="@id/circleListeners"
+                app:layout_constraintTop_toTopOf="@id/circleListeners" />
+
+            <TextView
+                android:id="@+id/textViewListeners"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_ic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewListeners" />
+
+            <TextView
+                android:id="@+id/divisor"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textSize="18sp"
+                android:background="@color/divisor"
+                android:text="@string/empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewListeners" />
+
+
+            <TextView
+                android:id="@+id/textViewMusicTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_music"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisor" />
+
+            <TextView
+                android:id="@+id/textViewMusic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_music"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewMusicTitle" />
+
+            <TextView
+                android:id="@+id/divisorMusic"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textSize="18sp"
+                android:background="@color/divisor"
+                android:text="@string/empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewMusic" />
+
+            <TextView
+                android:id="@+id/textViewPlayStopTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_playstop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisorMusic" />
+
+            <ImageView
+                android:id="@+id/imageViewPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/buttonInfo"
+                android:contentDescription="@string/description_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewPlayStopTitle"
+                app:srcCompat="@drawable/ic_baseline_play_circle_filled_55"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textViewPlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_play"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewPlay" />
+
+            <ImageView
+                android:id="@+id/imageViewStop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/buttonInfo"
+                android:contentDescription="@string/description_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewPlay"
+                app:srcCompat="@drawable/ic_baseline_stop_circle_55"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textViewStop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_stop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewStop" />
+
+            <TextView
+                android:id="@+id/divisorPlayStop"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textSize="18sp"
+                android:background="@color/divisor"
+                android:text="@string/empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewStop" />
+
+
+            <TextView
+                android:id="@+id/textViewStatusTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_status"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisorPlayStop" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchStatusOn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:textSize="23sp"
+                android:enabled="false"
+                android:checked="true"
+                android:textColor="@color/online"
+                android:text="@string/status_online"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewStatusTitle"/>
+
+            <TextView
+                android:id="@+id/textViewStatusOn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_online"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switchStatusOn" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchStatusOff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="5dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginStart="24dp"
+                android:textSize="23sp"
+                android:enabled="false"
+                android:checked="false"
+                android:textColor="@color/offline"
+                android:text="@string/status_offline"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewStatusOn"/>
+
+            <TextView
+                android:id="@+id/textViewStatusOff"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_offline"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/switchStatusOff" />
+
+            <TextView
+                android:id="@+id/divisorStatus"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textSize="18sp"
+                android:background="@color/divisor"
+                android:text="@string/empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewStatusOff" />
+
+
+            <TextView
+                android:id="@+id/textViewVolumenTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_volumen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisorStatus" />
+
+            <ImageView
+                android:id="@+id/imageViewVolumen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/buttonInfo"
+                android:contentDescription="@string/description_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewVolumenTitle"
+                app:srcCompat="@drawable/ic_baseline_volume_up_55"
+                tools:ignore="VectorDrawableCompat" />
+
+            <TextView
+                android:id="@+id/textViewVolumen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_volumen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewVolumen" />
+
+            <TextView
+                android:id="@+id/divisorVolumen"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:textSize="18sp"
+                android:background="@color/divisor"
+                android:text="@string/empty"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewVolumen" />
+
+
+            <TextView
+                android:id="@+id/textViewNotificacionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTitles"
+                android:gravity="fill"
+                android:text="@string/fh_title_notificacion"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divisorVolumen" />
+
+            <TextView
+                android:id="@+id/textViewNotificacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_notificacion"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificacionTitle" />
+
+            <TextView
+                android:id="@+id/textViewNotificacionf1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_nt1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificacion" />
+
+            <TextView
+                android:id="@+id/textViewNotificacionf2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_nt2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificacionf1" />
+
+            <TextView
+                android:id="@+id/textViewNotificacionf3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_nt3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificacionf2" />
+
+            <TextView
+                android:id="@+id/textViewNotificacionf4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:text="@string/fh_cnt_nt4"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewNotificacionf3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>

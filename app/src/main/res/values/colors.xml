@@ -15,4 +15,6 @@
     <color name="whiteAlpha">#B3E8EAF6</color>
     <color name="buttonInfo">#0091EA</color>
     <color name="textSecondary">#373737</color>
+    <color name="divisor">#757575</color>
+    <color name="colorTitles">#002A30</color>
 </resources>

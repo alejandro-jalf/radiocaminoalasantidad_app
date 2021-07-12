@@ -11,7 +11,7 @@
     <string name="textItemContacto">Contactos</string>
     <string name="textItemHorarios">Horarios</string>
     <string name="textItemAbout">A cerca de</string>
-    <string name="listeners">0</string>
+    <string name="listeners">7</string>
     <string name="contactRadio">Contactos de la radio</string>
     <string name="contactEncargado">Encargado: David Dominguez Aguirre</string>
     <string name="faceRadio">Radio Santidad</string>
@@ -35,4 +35,25 @@
     <string name="menu_home">Inicio</string>
     <string name="menu_gallery">Contactos</string>
     <string name="menu_slideshow">Horarios</string>
+    <string name="menu_help">Ayuda</string>
+
+    <string name="fh_title_ic">Icono de oyentes</string>
+    <string name="fh_title_music">Titulo de lo que se esta reproduciendo</string>
+    <string name="fh_title_playstop">Iniciando o deteniendo reproducción</string>
+    <string name="fh_title_status">Estado de la transmision</string>
+    <string name="fh_title_notificacion">Notificación</string>
+    <string name="fh_title_volumen">Barra de volumen</string>
+    <string name="fh_cnt_ic">Este icono nos dice la cantidad de radio escuchas que hay en este momento</string>
+    <string name="fh_cnt_music">En la parte inferior del reproductor justo abajo del logotipo de la radio aparece un título, este nos dice que alabanza se está reproduciendo en este momento, o quien esta transmitiendo en vivo</string>
+    <string name="fh_cnt_play">Cuando aparezca este icono, nos indica que la reproducción está detenida, al dar iniciar comenzará la aplicación a conectarse con el reproductor de internet, por lo tanto podría tardar unos segundos en iniciar.</string>
+    <string name="fh_cnt_stop">Cuando aparezca este icono, nos indica que la reproducción esta iniciada o se está conectando con el reproductor de internet, al dar click sobre el botón la reproducción se detendrá o la conexión se cancelará.</string>
+    <string name="fh_cnt_online">Este icono nos indica que la transmisión esta activa.</string>
+    <string name="fh_cnt_offline">Este icono nos indica que la transmisión esta apagada.</string>
+    <string name="fh_cnt_status">Junto al icono aparecerán mensajes del estado de la conexión.</string>
+    <string name="fh_cnt_notificacion">Al momento de iniciar por primera vez la reproducción de audio, aparecerá una notificación en la parte superior de su dispositivo, esta cumplirá con las siguientes funciones:</string>
+    <string name="fh_cnt_nt1" >1.- Nos mostrara el estado de la reproducción: Reproduciendo, Detenido, Cargando</string>
+    <string name="fh_cnt_nt2" >2.- Nos brindara accesos rápidos a iniciar o detener la reproducción.</string>
+    <string name="fh_cnt_nt3" >3.- Cuenta con un botón de cerrar, este botón detiene la reproducción y elimina la notificación.</string>
+    <string name="fh_cnt_nt4" >4.- Al dar click en la parte que está justo arriba de los botones se abrirá la aplicación.</string>
+    <string name="fh_cnt_volumen">La aplicación cuenta con un botón de volumen, este lo que hace es desplegar una barra de volumen, la cual es independiente del dispositivo, por lo cual al mover la barra solo afectara al volumen del reproductor de radio.</string>
 </resources>
