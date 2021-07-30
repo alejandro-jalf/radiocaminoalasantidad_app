@@ -214,20 +214,32 @@ public class ContactsFragment extends Fragment {
     }
 
     private void callTo(String number) {
-        startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number)));
+        try {
+            startActivity(new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number)));
+        } catch (Exception e) {
+            Toast.makeText(context, "No se pudo completar la llamada en su dispositivo", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openCall(String number) {
-        Toast.makeText(context, "Abriendo aplicacion de llamadas", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number)));
+        try {
+            Toast.makeText(context, "Abriendo aplicacion de llamadas", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number)));
+        } catch (Exception e) {
+            Toast.makeText(context, "No se pudo abrir la aplicacion de llamadas", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void senMessageTo(String number) {
-        String message = "Bendiciones";
-        Toast.makeText(context, "Abriendo aplicacion de mensajes: ", Toast.LENGTH_SHORT).show();
-        Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
-        smsIntent.putExtra("sms_body", message);
-        startActivity(smsIntent);
+        try {
+            String message = "Bendiciones";
+            Toast.makeText(context, "Abriendo aplicacion de mensajes: ", Toast.LENGTH_SHORT).show();
+            Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + number));
+            smsIntent.putExtra("sms_body", message);
+            startActivity(smsIntent);
+        } catch (Exception e) {
+            Toast.makeText(context, "No se pudo abrir la aplicacion de mensajes", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void sendWhatsappTo(String number) {
@@ -270,6 +282,7 @@ public class ContactsFragment extends Fragment {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(config.getUrlRadioSantidadWeb())));
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(context, "No se pudo abrir la pagina", Toast.LENGTH_SHORT).show();
         }
     }
 
